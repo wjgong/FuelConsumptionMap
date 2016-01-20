@@ -9,6 +9,7 @@ Item {
     height: 720
 
     property alias mapViewer: mapViewer
+    property alias location: location
 
     Plugin {
         id: osmPlugin
@@ -20,5 +21,20 @@ Item {
         anchors.fill: parent
         plugin: osmPlugin
         zoomLevel: 13
+
+        gesture.enabled: true
+        gesture.activeGestures: MapGestureArea.ZoomGesture | MapGestureArea.PanGesture
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        MapQuickItem {
+            id: location
+            sourceItem: Image {
+                source: "icon/location.svg"
+            }
+            scale: 2
+            antialiasing: true
+        }
     }
 }

@@ -18,9 +18,21 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                var currentPosition = positionSource.position.coordinate
-                mainForm.mapViewer.center = currentPosition
+                mainForm.mapViewer.center = positionSource.position.coordinate
+                mainForm.location.coordinate = positionSource.position.coordinate
             }
+        }
+
+        Component.onCompleted: {
+            for (var i = 0; i < mapViewer.supportedMapTypes.length; i++) {
+                var type = mapViewer.supportedMapTypes[i];
+                if (type.style === MapType.TerrainMap) {
+                    mapViewer.activeMapType = type;
+                    break;
+                }
+            }
+
+            location.coordinate = positionSource.position.coordinate
         }
     }
 }

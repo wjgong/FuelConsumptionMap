@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets network positioning location
+QT += qml quick widgets network positioning location svg
 
 CONFIG += c++11
 
