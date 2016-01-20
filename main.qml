@@ -18,8 +18,7 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                mainForm.mapViewer.center = positionSource.position.coordinate
-                mainForm.location.coordinate = positionSource.position.coordinate
+                mainForm.myLocation.coordinate = positionSource.position.coordinate
             }
         }
 
@@ -32,7 +31,14 @@ ApplicationWindow {
                 }
             }
 
-            location.coordinate = positionSource.position.coordinate
+            myLocation.coordinate = positionSource.position.coordinate
+            mapViewer.center = positionSource.position.coordinate
+        }
+
+        myLocationBtn.onClicked: PropertyAnimation {
+            target: mainForm.mapViewer
+            property: "center"
+            to: positionSource.position.coordinate
         }
     }
 }

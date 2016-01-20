@@ -9,32 +9,71 @@ Item {
     height: 720
 
     property alias mapViewer: mapViewer
-    property alias location: location
+    property alias myLocation: myLocation
+    property alias myLocationBtn: myLocationBtn
 
-    Plugin {
-        id: osmPlugin
-        name: "osm"
-    }
-
-    Map {
-        id: mapViewer
+    RowLayout {
+        id: mainLayout
+        anchors.rightMargin: 5
+        anchors.leftMargin: 5
+        anchors.bottomMargin: 5
+        anchors.topMargin: 5
         anchors.fill: parent
-        plugin: osmPlugin
-        zoomLevel: 13
+        spacing: 6
 
-        gesture.enabled: true
-        gesture.activeGestures: MapGestureArea.ZoomGesture | MapGestureArea.PanGesture
-        MouseArea {
-            anchors.fill: parent
+        Rectangle {
+            id: ctrlPanel
+            color: 'lightsteelblue'
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.maximumWidth: 200
+
+            ColumnLayout {
+                id: ctrlPanelLayout
+                anchors.rightMargin: 5
+                anchors.leftMargin: 5
+                anchors.bottomMargin: 5
+                anchors.topMargin: 5
+                anchors.fill: parent
+
+                Button {
+                    id: myLocationBtn
+                    iconSource: "icon/myLocation.svg"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                }
+            }
         }
 
-        MapQuickItem {
-            id: location
-            sourceItem: Image {
-                source: "icon/location.svg"
+        Rectangle {
+            id:mapPanel
+            color: 'blue'
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Map {
+                id: mapViewer
+                anchors.fill: parent
+                plugin: Plugin {
+                    name: "osm"
+                }
+                zoomLevel: 13
+
+                gesture.enabled: true
+                gesture.activeGestures: MapGestureArea.ZoomGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
+                gesture.flickDeceleration: 3000
+                MouseArea {
+                    anchors.fill: parent
+                }
+
+                MapQuickItem {
+                    id: myLocation
+                    sourceItem: Image {
+                        source: "icon/myLocation.svg"
+                    }
+                    antialiasing: true
+                }
             }
-            scale: 2
-            antialiasing: true
         }
     }
 }

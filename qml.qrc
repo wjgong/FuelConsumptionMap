@@ -2,6 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
-        <file>icon/location.svg</file>
+        <file>icon/myLocation.svg</file>
     </qresource>
 </RCC>
