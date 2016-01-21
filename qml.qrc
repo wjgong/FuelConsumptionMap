@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
         <file>icon/myLocation.svg</file>
+        <file>icon/routes.svg</file>
     </qresource>
 </RCC>

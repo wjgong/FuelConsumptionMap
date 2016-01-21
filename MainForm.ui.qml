@@ -11,6 +11,7 @@ Item {
     property alias mapViewer: mapViewer
     property alias myLocation: myLocation
     property alias myLocationBtn: myLocationBtn
+    property alias loadRouteBtn: loadRouteBtn
 
     RowLayout {
         id: mainLayout
@@ -39,6 +40,13 @@ Item {
                 Button {
                     id: myLocationBtn
                     iconSource: "icon/myLocation.svg"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    id: loadRouteBtn
+                    iconSource: "icon/routes.svg"
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
                 }
