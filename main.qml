@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
-import QtPositioning 5.5
-import QtLocation 5.5
+import QtPositioning 5.6
+import QtLocation 5.6
 import QtQuick.Dialogs 1.2
 import QtQuick.XmlListModel 2.0
 
@@ -55,9 +55,13 @@ ApplicationWindow {
             onStatusChanged: {
                 if (status === XmlListModel.Ready) {
                     console.log("display the route on the map", count);
+                    var coordinate;
                     for (var i = 0; i < routeModel.count; i ++) {
-                        console.log("[(" + get(i).lat + ", " + get(i).lon + ") " + get(i).ele + "]");
+//                        console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
+                        coordinate = QtPositioning.coordinate(get(i).lat, get(i).lon, get(i).ele);
+                        mainForm.routePolyline.addCoordinate(coordinate);
                     }
+                    mainForm.mapViewer.fitViewportToMapItems();
                 }
 
                 if (status == XmlListModel.Error) {

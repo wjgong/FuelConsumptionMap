@@ -1,8 +1,8 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import QtPositioning 5.5
-import QtLocation 5.5
+import QtPositioning 5.6
+import QtLocation 5.6
 
 Item {
     width: 1280
@@ -12,6 +12,7 @@ Item {
     property alias myLocation: myLocation
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
+    property alias routePolyline: routePolyline
 
     RowLayout {
         id: mainLayout
@@ -68,11 +69,8 @@ Item {
                 zoomLevel: 13
 
                 gesture.enabled: true
-                gesture.activeGestures: MapGestureArea.ZoomGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
+                gesture.acceptedGestures: MapGestureArea.PinchGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
                 gesture.flickDeceleration: 3000
-                MouseArea {
-                    anchors.fill: parent
-                }
 
                 MapQuickItem {
                     id: myLocation
@@ -80,6 +78,12 @@ Item {
                         source: "icon/myLocation.svg"
                     }
                     antialiasing: true
+                }
+
+                MapPolyline {
+                    id: routePolyline
+                    line.width: 3
+                    line.color: 'green'
                 }
             }
         }
