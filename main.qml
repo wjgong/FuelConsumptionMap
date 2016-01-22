@@ -45,17 +45,18 @@ ApplicationWindow {
 
         XmlListModel {
             id: routeModel
+            namespaceDeclarations: "declare default element namespace 'http://www.topografix.com/GPX/1/1';"
             query: "/gpx/trk/trkseg/trkpt"
 
-            XmlRole { name: "lat";  query: "@lat/string()" }
-            XmlRole { name: "lon";  query: "@lon/string()" }
+            XmlRole { name: "lat";  query: "@lat/number()" }
+            XmlRole { name: "lon";  query: "@lon/number()" }
             XmlRole { name: "ele";  query: "ele/number()" }
 
             onStatusChanged: {
                 if (status === XmlListModel.Ready) {
                     console.log("display the route on the map", count);
                     for (var i = 0; i < routeModel.count; i ++) {
-                        console.log(routeModel.get(i).ele);
+                        console.log("[(" + get(i).lat + ", " + get(i).lon + ") " + get(i).ele + "]");
                     }
                 }
 
