@@ -4,6 +4,7 @@ import QtPositioning 5.6
 import QtLocation 5.6
 import QtQuick.Dialogs 1.2
 import QtQuick.XmlListModel 2.0
+import QtQml 2.2
 
 ApplicationWindow {
     visible: true
@@ -26,7 +27,7 @@ ApplicationWindow {
         }
 
         Component.onCompleted: {
-            for (var i = 0; i < mapViewer.supportedMapTypes.length; i++) {
+            for (var i = 0, l = mapViewer.supportedMapTypes.length; i < l; i ++) {
                 var type = mapViewer.supportedMapTypes[i];
                 if (type.style === MapType.TerrainMap) {
                     mapViewer.activeMapType = type;
@@ -54,19 +55,24 @@ ApplicationWindow {
             XmlRole { name: "ele";  query: "ele/number()" }
 
             onStatusChanged: {
-                if (status === XmlListModel.Ready) {
+                switch(status) {
+                case XmlListModel.Loading:
+                    console.log("loading coordinates...");
+                    break;
+
+                case XmlListModel.Ready:
                     console.log("display the route on the map", count);
                     mainForm.cleanRoute();
-                    mainForm.paintRoute();
-                }
+                    //                    mainForm.paintRoute();
+                    mainForm.renderRouteByFuel();
+                    break;
 
-                if (status == XmlListModel.Error) {
+                case XmlListModel.Error:
                     console.log("xml loading error: ", errorString());
+                    break;
                 }
             }
         }
-
-
 
         FileDialog {
             id: fileDialog
@@ -91,8 +97,8 @@ ApplicationWindow {
         }
 
         function paintRoute() {
-            for (var i = 0; i < routeModel.count; i ++) {
-//                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
+            for (var i = 0, l = routeModel.count; i < l; i ++) {
+                //                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
                 var coordinate = QtPositioning.coordinate(routeModel.get(i).lat,
                                                           routeModel.get(i).lon,
                                                           routeModel.get(i).ele);
@@ -109,6 +115,47 @@ ApplicationWindow {
             routePolyline.path = path;
         }
 
+        function renderRouteByFuel() {
+            var subRoutes = [];
+            var j = 0;
+            var fuel = routeModel.get(0).ele
+            console.log("fuel " + fuel);
+            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}', mapViewer);
+            for (var i = 0, l = routeModel.count; i < l; i ++) {
+                var routePoint = routeModel.get(i);
+                if (fuel !== routePoint.ele) {
+                    var coordinate = QtPositioning.coordinate(routePoint.lat,
+                                                              routePoint.lon,
+                                                              routePoint.ele);
+                    subRoutes[j].addCoordinate(coordinate);
+                    console.log("subRoute " + j + " point count " + subRoutes[j].pathLength());
+                    fuel = routePoint.ele;
+                    console.log("fuel " + fuel);
 
+                    subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
+                                                        mapViewer);
+                }
+                coordinate = QtPositioning.coordinate(routePoint.lat,
+                                                      routePoint.lon,
+                                                      routePoint.ele);
+                subRoutes[j].addCoordinate(coordinate);
+            }
+
+            console.log("subRoutes.length: " + subRoutes.length);
+            for (i = 0, l = subRoutes.length; i < l; i ++) {
+                var subRoute = subRoutes[i];
+                subRoute.line.width = 3;
+                subRoute.line.color = mappingColor(subRoute.path[0].altitude);
+                mapViewer.addMapItem(subRoute);
+                subRoute.visible = true;
+            }
+
+            mapViewer.fitViewportToMapItems();
+        }
+
+        function mappingColor(fuel) {
+            var colors = ["green", "yellowgreen", "yellow", "orange", "red"];
+            return colors[fuel % 5];
+        }
     }
 }
