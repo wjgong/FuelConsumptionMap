@@ -20,7 +20,8 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                mainForm.myLocation.coordinate = positionSource.position.coordinate
+                mainForm.myLocation.coordinate =
+                        positionSource.position.coordinate
             }
         }
 
@@ -55,13 +56,8 @@ ApplicationWindow {
             onStatusChanged: {
                 if (status === XmlListModel.Ready) {
                     console.log("display the route on the map", count);
-                    var coordinate;
-                    for (var i = 0; i < routeModel.count; i ++) {
-//                        console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
-                        coordinate = QtPositioning.coordinate(get(i).lat, get(i).lon, get(i).ele);
-                        mainForm.routePolyline.addCoordinate(coordinate);
-                    }
-                    mainForm.mapViewer.fitViewportToMapItems();
+                    mainForm.cleanRoute();
+                    mainForm.paintRoute();
                 }
 
                 if (status == XmlListModel.Error) {
@@ -70,10 +66,7 @@ ApplicationWindow {
             }
         }
 
-        function parseGpx(fileUrl) {
-            console.log("parsing gpx file url: ", fileUrl);
-            routeModel.source = fileUrl;
-        }
+
 
         FileDialog {
             id: fileDialog
@@ -89,5 +82,33 @@ ApplicationWindow {
         }
 
         loadRouteBtn.onClicked: fileDialog.open()
+
+        cleanRouteBtn.onClicked: cleanRoute()
+
+        function parseGpx(fileUrl) {
+            console.log("parsing gpx file url: ", fileUrl);
+            routeModel.source = fileUrl;
+        }
+
+        function paintRoute() {
+            for (var i = 0; i < routeModel.count; i ++) {
+//                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
+                var coordinate = QtPositioning.coordinate(routeModel.get(i).lat,
+                                                          routeModel.get(i).lon,
+                                                          routeModel.get(i).ele);
+                routePolyline.addCoordinate(coordinate);
+            }
+            routePolyline.visible = true;
+            mapViewer.fitViewportToMapItems();
+        }
+
+        function cleanRoute() {
+            routePolyline.visible = false;
+            var path = routePolyline.path;
+            path = [];
+            routePolyline.path = path;
+        }
+
+
     }
 }

@@ -12,6 +12,7 @@ Item {
     property alias myLocation: myLocation
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
+    property alias cleanRouteBtn: cleanRouteBtn
     property alias routePolyline: routePolyline
 
     RowLayout {
@@ -50,6 +51,14 @@ Item {
                     iconSource: "icon/routes.svg"
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
+                }
+
+                Button {
+                    id: cleanRouteBtn
+                    iconSource: "icon/cleanRoute.png"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: loadRouteBtn.height
                 }
             }
         }

@@ -4,5 +4,6 @@
         <file>MainForm.ui.qml</file>
         <file>icon/myLocation.svg</file>
         <file>icon/routes.svg</file>
+        <file>icon/cleanRoute.png</file>
     </qresource>
 </RCC>
