@@ -21,7 +21,7 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                mainForm.myLocation.coordinate =
+                mapViewer.myLocation.coordinate =
                         positionSource.position.coordinate
             }
         }
@@ -67,6 +67,11 @@ ApplicationWindow {
             }
         }
 
+        MapComponet {
+            id: mapViewer
+            parent: mainForm.mapPanel
+        }
+
         Component.onCompleted: {
             for (var i = 0, l = mapViewer.supportedMapTypes.length; i < l; i ++) {
                 var type = mapViewer.supportedMapTypes[i];
@@ -76,12 +81,12 @@ ApplicationWindow {
                 }
             }
 
-            myLocation.coordinate = positionSource.position.coordinate
+            mapViewer.myLocation.coordinate = positionSource.position.coordinate
             mapViewer.center = positionSource.position.coordinate
         }
 
         myLocationBtn.onClicked: PropertyAnimation {
-            target: mainForm.mapViewer
+            target: mapViewer
             property: "center"
             to: positionSource.position.coordinate
         }
@@ -127,9 +132,9 @@ ApplicationWindow {
                                                               routePoint.lon,
                                                               routePoint.ele);
                     subRoutes[j].addCoordinate(coordinate);
-                    console.log("subRoute " + j + " point count " + subRoutes[j].pathLength());
+//                    console.log("subRoute " + j + " point count " + subRoutes[j].pathLength());
                     fuel = routePoint.ele;
-                    console.log("fuel " + fuel);
+//                    console.log("fuel " + fuel);
 
                     subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
                                                         mapViewer);
@@ -161,7 +166,7 @@ ApplicationWindow {
 
         function removeRouteByFuel() {
             mapViewer.clearMapItems();
-            mapViewer.addMapItem(myLocation);
+            mapViewer.addMapItem(mapViewer.myLocation);
         }
     }
 }

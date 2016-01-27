@@ -1,19 +1,15 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import QtPositioning 5.6
-import QtLocation 5.6
 
 Item {
     width: 1280
     height: 720
 
-    property alias mapViewer: mapViewer
-    property alias myLocation: myLocation
+    property alias mapPanel: mapPanel
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
     property alias cleanRouteBtn: cleanRouteBtn
-    property alias routePolyline: routePolyline
 
     RowLayout {
         id: mainLayout
@@ -69,39 +65,13 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Map {
-                id: mapViewer
-                anchors.fill: parent
-                plugin: Plugin {
-                    name: "osm"
-                }
-                zoomLevel: 13
-
-                gesture.enabled: true
-                gesture.acceptedGestures: MapGestureArea.PinchGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
-                gesture.flickDeceleration: 3000
-
-                MapQuickItem {
-                    id: myLocation
-                    sourceItem: Image {
-                        source: "icon/myLocation.svg"
-                    }
-                    antialiasing: true
-                }
-
-                MapPolyline {
-                    id: routePolyline
-                    line.width: 3
-                    line.color: 'green'
-                }
-            }
-
             Column {
                 id: fuelConsumptionColorTbl
                 spacing: 1
                 anchors.right: parent.right
                 anchors.top: parent.top
                 opacity: 0.5
+                z: 1
 
                 Rectangle {
                     color: "red";         width: 50; height: 70
