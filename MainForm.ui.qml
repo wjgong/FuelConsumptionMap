@@ -95,6 +95,95 @@ Item {
                     line.color: 'green'
                 }
             }
+
+            Column {
+                id: fuelConsumptionColorTbl
+                spacing: 1
+                anchors.right: parent.right
+                anchors.top: parent.top
+                opacity: 0.5
+
+                Rectangle {
+                    color: "red";         width: 50; height: 70
+                    Text {
+                        text: ">12"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "maroon";         width: 50; height: 70
+                    Text {
+                        text: "12"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "saddlebrown";         width: 50; height: 70
+                    Text {
+                        text: "11"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "darkorange";         width: 50; height: 70
+                    Text {
+                        text: "10"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "yellow";         width: 50; height: 70
+                    Text {
+                        text: "9"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "greenyellow";         width: 50; height: 70
+                    Text {
+                        text: "8"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "green";         width: 50; height: 70
+                    Text {
+                        text: "7"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "springgreen";         width: 50; height: 70
+                    Text {
+                        text: "6"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "steelblue";         width: 50; height: 70
+                    Text {
+                        text: "5"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+                Rectangle {
+                    color: "blue";         width: 50; height: 70
+                    Text {
+                        text: "<5"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                    }
+                }
+            }
         }
     }
 }

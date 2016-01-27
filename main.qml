@@ -26,23 +26,17 @@ ApplicationWindow {
             }
         }
 
-        Component.onCompleted: {
-            for (var i = 0, l = mapViewer.supportedMapTypes.length; i < l; i ++) {
-                var type = mapViewer.supportedMapTypes[i];
-                if (type.style === MapType.TerrainMap) {
-                    mapViewer.activeMapType = type;
-                    break;
-                }
+        FileDialog {
+            id: fileDialog
+            title: qsTr("Choose a route file")
+            nameFilters: ["GPS files (*.gpx)"]
+            folder: shortcuts.documents
+
+            width: mainForm.width
+
+            onAccepted: {
+                mainForm.parseGpx(fileUrl)
             }
-
-            myLocation.coordinate = positionSource.position.coordinate
-            mapViewer.center = positionSource.position.coordinate
-        }
-
-        myLocationBtn.onClicked: PropertyAnimation {
-            target: mainForm.mapViewer
-            property: "center"
-            to: positionSource.position.coordinate
         }
 
         XmlListModel {
@@ -62,8 +56,7 @@ ApplicationWindow {
 
                 case XmlListModel.Ready:
                     console.log("display the route on the map", count);
-                    mainForm.cleanRoute();
-                    //                    mainForm.paintRoute();
+                    mainForm.removeRouteByFuel();
                     mainForm.renderRouteByFuel();
                     break;
 
@@ -74,22 +67,28 @@ ApplicationWindow {
             }
         }
 
-        FileDialog {
-            id: fileDialog
-            title: qsTr("Choose a route file")
-            nameFilters: ["GPS files (*.gpx)"]
-            folder: shortcuts.documents
-
-            width: mainForm.width
-
-            onAccepted: {
-                mainForm.parseGpx(fileUrl)
+        Component.onCompleted: {
+            for (var i = 0, l = mapViewer.supportedMapTypes.length; i < l; i ++) {
+                var type = mapViewer.supportedMapTypes[i];
+                if (type.style === MapType.TerrainMap) {
+                    mapViewer.activeMapType = type;
+                    break;
+                }
             }
+
+            myLocation.coordinate = positionSource.position.coordinate
+            mapViewer.center = positionSource.position.coordinate
+        }
+
+        myLocationBtn.onClicked: PropertyAnimation {
+            target: mainForm.mapViewer
+            property: "center"
+            to: positionSource.position.coordinate
         }
 
         loadRouteBtn.onClicked: fileDialog.open()
 
-        cleanRouteBtn.onClicked: cleanRoute()
+        cleanRouteBtn.onClicked: removeRouteByFuel()
 
         function parseGpx(fileUrl) {
             console.log("parsing gpx file url: ", fileUrl);
@@ -154,8 +153,15 @@ ApplicationWindow {
         }
 
         function mappingColor(fuel) {
-            var colors = ["green", "yellowgreen", "yellow", "orange", "red"];
-            return colors[fuel % 5];
+            var colors = ["blue", "steelblue", "springgreen", "green",
+                          "greenyellow", "yellow", "darkorange", "saddlebrown",
+                          "maroon", "red"];
+            return colors[fuel % 10];
+        }
+
+        function removeRouteByFuel() {
+            mapViewer.clearMapItems();
+            mapViewer.addMapItem(myLocation);
         }
     }
 }
