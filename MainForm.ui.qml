@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
+import QtQuick.Extras 1.4
 
 Item {
     width: 1280
@@ -10,6 +11,12 @@ Item {
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
     property alias cleanRouteBtn: cleanRouteBtn
+    property alias routeInfoBtn: routeInfoBtn
+    property alias routeInfoPanel: routeInfoPanel
+    property alias distanceValue: distanceValue
+    property alias fuelConspValue: fuelConspValue
+    property alias amountFuelValue: amountFuelValue
+    property alias avgSpeedValue: avgSpeedValue
 
     RowLayout {
         id: mainLayout
@@ -56,12 +63,24 @@ Item {
                     Layout.fillWidth: true
                     Layout.maximumHeight: loadRouteBtn.height
                 }
+
+                ToggleButton {
+                    id: routeInfoBtn
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.maximumWidth: ctrlPanel.width/2
+                    Layout.maximumHeight: loadRouteBtn.height
+                    Text {
+                        anchors.centerIn: parent
+                        text: qsTr("Route Info")
+                        font.pointSize: 9
+                    }
+                }
             }
         }
 
         Rectangle {
-            id:mapPanel
-            color: 'blue'
+            id: mapPanel
+            color: "blue"
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -151,6 +170,60 @@ Item {
                         text: "<5"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
+                    }
+                }
+            }
+
+            Rectangle {
+                id: routeInfoPanel
+                color: "lightsteelblue"
+                width: mapPanel.width/2
+                height: mapPanel.height/4
+                anchors.right: fuelConsumptionColorTbl.left
+                y: -height
+                z: 1
+                opacity: 0.5
+
+                Grid {
+                    columns: 2
+                    spacing: 3
+                    anchors.top: routeInfoPanel.top
+                    anchors.left: routeInfoPanel.left
+
+                    Text {
+                        id: distanceLabel
+                        text: qsTr("Distance: ")
+                    }
+                    Text {
+                        id: distanceValue
+                        text: "0 m"
+                    }
+
+                    Text {
+                        id: fuelConspLabel
+                        text: qsTr("Fuel Consumption: ")
+                    }
+                    Text {
+                        id: fuelConspValue
+                        text: "0 L/100km"
+                    }
+
+                    Text {
+                        id: amountFuelLabel
+                        text: qsTr("The Amount of Fuel: ")
+                    }
+                    Text {
+                        id: amountFuelValue
+                        text: "0 L"
+                    }
+
+                    Text {
+                        id: avgSpeedLabel
+                        text: qsTr("Average Speed: ")
+                    }
+                    Text {
+                        id: avgSpeedValue
+                        text: "0 km/h"
                     }
                 }
             }

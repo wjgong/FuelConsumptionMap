@@ -16,6 +16,11 @@ ApplicationWindow {
         id: mainForm
         anchors.fill: parent
 
+        property real routeDistance: 0.0
+        property real fuelConsumption: 0.0
+        property real amountOfFuel: 0.0
+        property real averageSpeed: 0.0
+
         PositionSource {
             id: positionSource
             active: true
@@ -56,6 +61,7 @@ ApplicationWindow {
 
                 case XmlListModel.Ready:
                     console.log("display the route on the map", count);
+                    mainForm.calculateRouteInfo(routeModel);
                     mainForm.removeRouteByFuel();
                     mainForm.renderRouteByFuel();
                     break;
@@ -95,14 +101,63 @@ ApplicationWindow {
 
         cleanRouteBtn.onClicked: removeRouteByFuel()
 
+        routeInfoBtn.onClicked: showRouteInfoPanel(routeInfoBtn.checked)
+
+        PropertyAnimation {
+            id: showRouteInfoPanelAni
+            target: mainForm.routeInfoPanel
+            property: "y"
+            to: 0
+            easing.type:  Easing.OutQuad
+        }
+
+        PropertyAnimation {
+            id: hideRouteInfoPanelAni
+            target: mainForm.routeInfoPanel
+            property: "y"
+            to: -mainForm.routeInfoPanel.height
+            easing.type:  Easing.OutQuad
+        }
+
         function parseGpx(fileUrl) {
             console.log("parsing gpx file url: ", fileUrl);
             routeModel.source = fileUrl;
         }
 
+        function calculateRouteInfo(routeGpxModel) {
+            var startPoint;
+            var endPoint;
+
+            routeDistance = 0;
+            var length = routeGpxModel.count - 1;
+            for (var i = 0; i < length; i++) {
+                startPoint = QtPositioning.coordinate(routeGpxModel.get(i).lat,
+                                                      routeGpxModel.get(i).lon);
+                endPoint = QtPositioning.coordinate(routeGpxModel.get(i+1).lat,
+                                                    routeGpxModel.get(i+1).lon);
+                routeDistance += startPoint.distanceTo(endPoint);
+            }
+            routeDistance = Math.round(routeDistance)/1000.0;
+            distanceValue.text = routeDistance + "km";
+
+            fuelConsumption = 8.8;
+            fuelConspValue.text = 8.8 + "L/100km";
+
+            amountOfFuel = (fuelConsumption * routeDistance / 100).toFixed(3);
+            amountFuelValue.text = amountOfFuel + "L";
+        }
+
+        function showRouteInfoPanel(checked) {
+            if (checked === true) {
+                showRouteInfoPanelAni.running = true;
+            } else {
+                hideRouteInfoPanelAni.running = true;
+            }
+        }
+
         function paintRoute() {
             for (var i = 0, l = routeModel.count; i < l; i ++) {
-                //                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
+//                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
                 var coordinate = QtPositioning.coordinate(routeModel.get(i).lat,
                                                           routeModel.get(i).lon,
                                                           routeModel.get(i).ele);
@@ -135,7 +190,6 @@ ApplicationWindow {
 //                    console.log("subRoute " + j + " point count " + subRoutes[j].pathLength());
                     fuel = routePoint.ele;
 //                    console.log("fuel " + fuel);
-
                     subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
                                                         mapViewer);
                 }
