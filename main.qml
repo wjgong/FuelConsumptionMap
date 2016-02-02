@@ -16,11 +16,6 @@ ApplicationWindow {
         id: mainForm
         anchors.fill: parent
 
-        property real routeDistance: 0.0
-        property real fuelConsumption: 0.0
-        property real amountOfFuel: 0.0
-        property real averageSpeed: 0.0
-
         PositionSource {
             id: positionSource
             active: true
@@ -52,6 +47,7 @@ ApplicationWindow {
             XmlRole { name: "lat";  query: "@lat/number()" }
             XmlRole { name: "lon";  query: "@lon/number()" }
             XmlRole { name: "ele";  query: "ele/number()" }
+            XmlRole { name: "time"; query: "time/string()"}
 
             onStatusChanged: {
                 switch(status) {
@@ -87,8 +83,8 @@ ApplicationWindow {
                 }
             }
 
-            mapViewer.myLocation.coordinate = positionSource.position.coordinate
-            mapViewer.center = positionSource.position.coordinate
+            mapViewer.myLocation.coordinate = positionSource.position.coordinate;
+            mapViewer.center = positionSource.position.coordinate;
         }
 
         myLocationBtn.onClicked: PropertyAnimation {
@@ -99,7 +95,10 @@ ApplicationWindow {
 
         loadRouteBtn.onClicked: fileDialog.open()
 
-        cleanRouteBtn.onClicked: removeRouteByFuel()
+        cleanRouteBtn.onClicked: {
+            resetRouteInfo();
+            removeRouteByFuel();
+        }
 
         routeInfoBtn.onClicked: showRouteInfoPanel(routeInfoBtn.checked)
 
@@ -124,6 +123,13 @@ ApplicationWindow {
             routeModel.source = fileUrl;
         }
 
+        function resetRouteInfo() {
+            routeDistance   = 0.0;
+            fuelConsumption = 0.0;
+            amountOfFuel    = 0.0;
+            averageSpeed    = 0.0;
+        }
+
         function calculateRouteInfo(routeGpxModel) {
             var startPoint;
             var endPoint;
@@ -137,14 +143,16 @@ ApplicationWindow {
                                                     routeGpxModel.get(i+1).lon);
                 routeDistance += startPoint.distanceTo(endPoint);
             }
-            routeDistance = Math.round(routeDistance)/1000.0;
-            distanceValue.text = routeDistance + "km";
+            routeDistance = Math.round(routeDistance/1000);
 
             fuelConsumption = 8.8;
-            fuelConspValue.text = 8.8 + "L/100km";
 
             amountOfFuel = (fuelConsumption * routeDistance / 100).toFixed(3);
-            amountFuelValue.text = amountOfFuel + "L";
+
+            var startTime = new Date(routeGpxModel.get(0).time);
+            var endTime = new Date(routeGpxModel.get(length).time);
+            var duration = (endTime.getTime() - startTime.getTime()) / 1000 / 3600;
+            averageSpeed = Math.round(routeDistance / duration);
         }
 
         function showRouteInfoPanel(checked) {
@@ -157,7 +165,6 @@ ApplicationWindow {
 
         function paintRoute() {
             for (var i = 0, l = routeModel.count; i < l; i ++) {
-//                console.log("(" + get(i).lat + ", " + get(i).lon + ", " + get(i).ele + ")");
                 var coordinate = QtPositioning.coordinate(routeModel.get(i).lat,
                                                           routeModel.get(i).lon,
                                                           routeModel.get(i).ele);
@@ -187,9 +194,7 @@ ApplicationWindow {
                                                               routePoint.lon,
                                                               routePoint.ele);
                     subRoutes[j].addCoordinate(coordinate);
-//                    console.log("subRoute " + j + " point count " + subRoutes[j].pathLength());
                     fuel = routePoint.ele;
-//                    console.log("fuel " + fuel);
                     subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
                                                         mapViewer);
                 }

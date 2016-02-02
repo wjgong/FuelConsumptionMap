@@ -13,10 +13,11 @@ Item {
     property alias cleanRouteBtn: cleanRouteBtn
     property alias routeInfoBtn: routeInfoBtn
     property alias routeInfoPanel: routeInfoPanel
-    property alias distanceValue: distanceValue
-    property alias fuelConspValue: fuelConspValue
-    property alias amountFuelValue: amountFuelValue
-    property alias avgSpeedValue: avgSpeedValue
+
+    property real routeDistance: 0.0
+    property real fuelConsumption: 0.0
+    property real amountOfFuel: 0.0
+    property real averageSpeed: 0.0
 
     RowLayout {
         id: mainLayout
@@ -196,7 +197,7 @@ Item {
                     }
                     Text {
                         id: distanceValue
-                        text: "0 m"
+                        text: routeDistance + "km"
                     }
 
                     Text {
@@ -205,7 +206,7 @@ Item {
                     }
                     Text {
                         id: fuelConspValue
-                        text: "0 L/100km"
+                        text: fuelConsumption + "L/100km"
                     }
 
                     Text {
@@ -214,7 +215,7 @@ Item {
                     }
                     Text {
                         id: amountFuelValue
-                        text: "0 L"
+                        text: amountOfFuel + "L"
                     }
 
                     Text {
@@ -223,7 +224,7 @@ Item {
                     }
                     Text {
                         id: avgSpeedValue
-                        text: "0 km/h"
+                        text: averageSpeed + "km/h"
                     }
                 }
             }
