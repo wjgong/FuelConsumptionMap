@@ -35,6 +35,7 @@ ApplicationWindow {
             width: mainForm.width
 
             onAccepted: {
+                mainForm.loadingIndicator.running = true;
                 mainForm.parseGpx(fileUrl)
             }
         }
@@ -60,6 +61,7 @@ ApplicationWindow {
                     mainForm.calculateRouteInfo(routeModel);
                     mainForm.removeRouteByFuel();
                     mainForm.renderRouteByFuel();
+                    mainForm.loadingIndicator.running = false;
                     break;
 
                 case XmlListModel.Error:
@@ -117,6 +119,17 @@ ApplicationWindow {
             to: -mainForm.routeInfoPanel.height
             easing.type:  Easing.OutQuad
         }
+
+        RotationAnimator {
+            id: rotateLoadingIndicator
+            target: mainForm.loadingIndicator
+            running: mainForm.loadingIndicator.running
+            loops: Animation.Infinite
+            duration: 1000
+            from: 0; to : 360
+        }
+
+
 
         function parseGpx(fileUrl) {
             console.log("parsing gpx file url: ", fileUrl);

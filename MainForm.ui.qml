@@ -7,6 +7,7 @@ Item {
     width: 1280
     height: 720
 
+    property alias loadingIndicator: loadingIndicator
     property alias mapPanel: mapPanel
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
@@ -18,6 +19,14 @@ Item {
     property real fuelConsumption: 0.0
     property real amountOfFuel: 0.0
     property real averageSpeed: 0.0
+
+    BusyIndicator {
+        id: loadingIndicator
+        z: 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        running: false
+    }
 
     RowLayout {
         id: mainLayout
