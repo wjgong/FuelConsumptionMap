@@ -20,14 +20,6 @@ Item {
     property real amountOfFuel: 0.0
     property real averageSpeed: 0.0
 
-    BusyIndicator {
-        id: loadingIndicator
-        z: 2
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        running: false
-    }
-
     RowLayout {
         id: mainLayout
         anchors.rightMargin: 5
@@ -94,6 +86,14 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            BusyIndicator {
+                id: loadingIndicator
+                z: 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                running: false
+            }
+
             Column {
                 id: fuelConsumptionColorTbl
                 spacing: 1
@@ -103,15 +103,15 @@ Item {
                 z: 1
 
                 Rectangle {
-                    color: "red";         width: 50; height: 70
+                    color: "red";         width: 50; height: mapPanel.height/10
                     Text {
                         text: ">12"
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottom: parent.bottom
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
                 Rectangle {
-                    color: "maroon";         width: 50; height: 70
+                    color: "maroon";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "12"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -119,7 +119,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "saddlebrown";         width: 50; height: 70
+                    color: "saddlebrown";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "11"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -127,7 +127,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "darkorange";         width: 50; height: 70
+                    color: "darkorange";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "10"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -135,7 +135,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "yellow";         width: 50; height: 70
+                    color: "yellow";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "9"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -143,7 +143,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "greenyellow";         width: 50; height: 70
+                    color: "greenyellow";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "8"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -151,7 +151,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "green";         width: 50; height: 70
+                    color: "green";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "7"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -159,7 +159,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "springgreen";         width: 50; height: 70
+                    color: "springgreen";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "6"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -167,7 +167,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "steelblue";         width: 50; height: 70
+                    color: "steelblue";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "5"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -175,11 +175,11 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "blue";         width: 50; height: 70
+                    color: "blue";         width: 50; height: mapPanel.height/10
                     Text {
                         text: "<5"
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottom: parent.bottom
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
@@ -187,14 +187,15 @@ Item {
             Rectangle {
                 id: routeInfoPanel
                 color: "lightsteelblue"
-                width: mapPanel.width/2
-                height: mapPanel.height/4
+                width: routeInfoGrid.width
+                height: routeInfoGrid.height
                 anchors.right: fuelConsumptionColorTbl.left
                 y: -height
                 z: 1
                 opacity: 0.5
 
                 Grid {
+                    id: routeInfoGrid
                     columns: 2
                     spacing: 3
                     anchors.top: routeInfoPanel.top

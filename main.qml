@@ -29,14 +29,14 @@ ApplicationWindow {
         FileDialog {
             id: fileDialog
             title: qsTr("Choose a route file")
-            nameFilters: ["GPS files (*.gpx)"]
+            nameFilters: [qsTr("GPS files (*.gpx)")]
             folder: shortcuts.documents
 
             width: mainForm.width
 
             onAccepted: {
                 mainForm.loadingIndicator.running = true;
-                mainForm.parseGpx(fileUrl)
+                mainForm.parseGpx(fileUrl);
             }
         }
 
@@ -109,7 +109,7 @@ ApplicationWindow {
             target: mainForm.routeInfoPanel
             property: "y"
             to: 0
-            easing.type:  Easing.OutQuad
+            easing.type: Easing.OutQuad
         }
 
         PropertyAnimation {
@@ -117,7 +117,7 @@ ApplicationWindow {
             target: mainForm.routeInfoPanel
             property: "y"
             to: -mainForm.routeInfoPanel.height
-            easing.type:  Easing.OutQuad
+            easing.type: Easing.OutQuad
         }
 
         RotationAnimator {
@@ -128,8 +128,6 @@ ApplicationWindow {
             duration: 1000
             from: 0; to : 360
         }
-
-
 
         function parseGpx(fileUrl) {
             console.log("parsing gpx file url: ", fileUrl);
@@ -198,14 +196,16 @@ ApplicationWindow {
             var subRoutes = [];
             var j = 0;
             var fuel = routeModel.get(0).ele
-            console.log("fuel " + fuel);
-            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}', mapViewer);
+
+            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
+                                              mapViewer);
             for (var i = 0, l = routeModel.count; i < l; i ++) {
+                var coordinate;
                 var routePoint = routeModel.get(i);
                 if (fuel !== routePoint.ele) {
-                    var coordinate = QtPositioning.coordinate(routePoint.lat,
-                                                              routePoint.lon,
-                                                              routePoint.ele);
+                    coordinate = QtPositioning.coordinate(routePoint.lat,
+                                                          routePoint.lon,
+                                                          routePoint.ele);
                     subRoutes[j].addCoordinate(coordinate);
                     fuel = routePoint.ele;
                     subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
@@ -217,7 +217,6 @@ ApplicationWindow {
                 subRoutes[j].addCoordinate(coordinate);
             }
 
-            console.log("subRoutes.length: " + subRoutes.length);
             for (i = 0, l = subRoutes.length; i < l; i ++) {
                 var subRoute = subRoutes[i];
                 subRoute.line.width = 3;
