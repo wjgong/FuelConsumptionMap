@@ -6,5 +6,10 @@
         <file>icon/routes.svg</file>
         <file>icon/cleanRoute.png</file>
         <file>MapComponet.qml</file>
+        <file>icon/recordPause.png</file>
+        <file>icon/recordStart.png</file>
+        <file>icon/recordStop.png</file>
+        <file>icon/saveRoute.png</file>
+        <file>icon/myDirection.png</file>
     </qresource>
 </RCC>

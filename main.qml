@@ -21,8 +21,12 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                mapViewer.myLocation.coordinate =
-                        positionSource.position.coordinate
+                if (mapViewer.state === "LOCATION")
+                    mapViewer.myLocation.coordinate =
+                            positionSource.position.coordinate;
+                else
+                    mapViewer.myDirection.coordinate =
+                            positionSource.position.coordinate;
             }
         }
 
@@ -103,6 +107,19 @@ ApplicationWindow {
         }
 
         routeInfoBtn.onClicked: showRouteInfoPanel(routeInfoBtn.checked)
+
+        modeSwitch.onCheckedChanged: {
+            console.log("modeSwitch clicked");
+            if (modeSwitch.checked === false) {
+                console.log("state from RECORDING to ROUTE_VIEWER");
+                mainForm.state = "ROUTE_VIEWER";
+                mapViewer.state = "LOCATION";
+            } else {
+                console.log("state from ROUTE_VIEWER to RECORDING");
+                mainForm.state = "RECORDING";
+                mapViewer.state = "DIRECTION";
+            }
+        }
 
         PropertyAnimation {
             id: showRouteInfoPanelAni

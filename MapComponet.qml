@@ -4,6 +4,7 @@ import QtLocation 5.6
 
 Map {
     property alias myLocation: myLocation
+    property alias myDirection: myDirection
     property alias routePolyline: routePolyline
 
     anchors.fill: parent
@@ -23,10 +24,31 @@ Map {
         }
         antialiasing: true
     }
+    MapQuickItem {
+        id: myDirection
+        sourceItem: Image {
+            source: "icon/myDirection.png"
+        }
+        antialiasing: true
+        visible: false
+    }
 
     MapPolyline {
         id: routePolyline
         line.width: 3
         line.color: 'green'
     }
+
+    states: [
+        State {
+            name: "LOCATION"
+            PropertyChanges { target: myLocation; visible: true }
+            PropertyChanges { target: myDirection; visible: false }
+        },
+        State {
+            name: "DIRECTION"
+            PropertyChanges { target: myLocation; visible: false }
+            PropertyChanges { target: myDirection; visible: true }
+        }
+    ]
 }

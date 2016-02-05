@@ -1,11 +1,13 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.2
 import QtQuick.Extras 1.4
 
 Item {
     width: 1280
     height: 720
+    state: "ROUTE_VIEWER"
 
     property alias loadingIndicator: loadingIndicator
     property alias mapPanel: mapPanel
@@ -14,6 +16,7 @@ Item {
     property alias cleanRouteBtn: cleanRouteBtn
     property alias routeInfoBtn: routeInfoBtn
     property alias routeInfoPanel: routeInfoPanel
+    property alias modeSwitch: modeSwitch
 
     property real routeDistance: 0.0
     property real fuelConsumption: 0.0
@@ -59,11 +62,29 @@ Item {
                 }
 
                 Button {
+                    id: recordCtrlBtn
+                    iconSource: "icon/recordStart.png"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: loadRouteBtn.height
+                    visible: false
+                }
+
+                Button {
                     id: cleanRouteBtn
                     iconSource: "icon/cleanRoute.png"
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
                     Layout.maximumHeight: loadRouteBtn.height
+                }
+
+                Button {
+                    id: saveRouteBtn
+                    iconSource: "icon/saveRoute.png"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: loadRouteBtn.height
+                    visible: false
                 }
 
                 ToggleButton {
@@ -75,6 +96,54 @@ Item {
                         anchors.centerIn: parent
                         text: qsTr("Route Info")
                         font.pointSize: 9
+                    }
+                }
+
+                ToggleButton {
+                    id: routeStatusBtn
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.maximumWidth: ctrlPanel.width/2
+                    Layout.maximumHeight: loadRouteBtn.height
+                    Text {
+                        anchors.centerIn: parent
+                        text: qsTr("Route Status")
+                        font.pointSize: 9
+                    }
+                    visible: false
+                }
+
+                Switch {
+                    id: modeSwitch
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 10
+                    checked: false
+                    style: SwitchStyle {
+                        groove: Rectangle {
+                            implicitWidth: loadRouteBtn.width/2
+                            implicitHeight: loadRouteBtn.height/2
+                            radius: 9
+                            color: "slategray"
+                            border.color: control.activeFocus ? "darkblue" : "gray"
+                            border.width: 1
+                        }
+                        handle: Rectangle {
+                            color: "red"
+                            border.color: "black"
+                            implicitWidth: loadRouteBtn.width/4
+                            implicitHeight: loadRouteBtn.height/2
+                            radius: 9
+                            gradient: Gradient {
+                                GradientStop { position: 0.0; color: "grey"}
+                                GradientStop { position: 0.5; color: "red"}
+                                GradientStop { position: 1.0; color: "grey"}
+                            }
+                            rotation: 90
+                        }
+                    }
+                    Text {
+                        anchors.left: parent.right
+                        text: qsTr(" Recording\n Mode")
+                        font.pointSize: 10
                     }
                 }
             }
@@ -240,4 +309,36 @@ Item {
             }
         }
     }
+
+    states: [
+        State {
+            name: "ROUTE_VIEWER"
+            PropertyChanges { target: myLocationBtn; iconSource: "icon/myLocation.svg" }
+
+            PropertyChanges { target: loadRouteBtn; visible: true }
+            PropertyChanges { target: cleanRouteBtn; visible: true }
+            PropertyChanges { target: routeInfoBtn; visible: true }
+            PropertyChanges { target: routeInfoPanel; visible: true }
+            PropertyChanges { target: fuelConsumptionColorTbl; visible: true }
+
+            PropertyChanges { target: recordCtrlBtn; visible: false }
+            PropertyChanges { target: saveRouteBtn; visible: false }
+            PropertyChanges { target: routeStatusBtn; visible: false }
+        },
+        State {
+            name: "RECORDING"
+            PropertyChanges { target: myLocationBtn; iconSource: "icon/myDirection.png" }
+
+            PropertyChanges { target: loadRouteBtn; visible: false }
+            PropertyChanges { target: cleanRouteBtn; visible: false }
+            PropertyChanges { target: routeInfoBtn; visible: false }
+            PropertyChanges { target: routeInfoPanel; visible: false }
+            PropertyChanges { target: fuelConsumptionColorTbl; visible: false }
+
+            PropertyChanges { target: recordCtrlBtn; visible: true }
+            PropertyChanges { target: saveRouteBtn; visible: true }
+            PropertyChanges { target: routeStatusBtn; visible: true }
+        }
+
+    ]
 }
