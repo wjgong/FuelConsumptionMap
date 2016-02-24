@@ -29,6 +29,7 @@ Map {
         sourceItem: Image {
             source: "icon/myDirection.png"
         }
+        rotation: -45
         antialiasing: true
         visible: false
     }

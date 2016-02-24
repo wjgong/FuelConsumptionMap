@@ -21,12 +21,15 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                if (mapViewer.state === "LOCATION")
+                if (mapViewer.state === "LOCATION") {
                     mapViewer.myLocation.coordinate =
                             positionSource.position.coordinate;
-                else
+                } else {
                     mapViewer.myDirection.coordinate =
                             positionSource.position.coordinate;
+                    if (mainForm.recordCtrlBtn.state === "recording")
+                        mainForm.writeGpxFile(positionSource.position.coordinate);
+                }
             }
         }
 
@@ -106,10 +109,13 @@ ApplicationWindow {
             removeRouteByFuel();
         }
 
+        recordCtrlBtn.onClicked: processRecordCtrlBtnState()
+
+        saveRouteBtn.onClicked: processSaveRouteBtnState()
+
         routeInfoBtn.onClicked: showRouteInfoPanel(routeInfoBtn.checked)
 
         modeSwitch.onCheckedChanged: {
-            console.log("modeSwitch clicked");
             if (modeSwitch.checked === false) {
                 console.log("state from RECORDING to ROUTE_VIEWER");
                 mainForm.state = "ROUTE_VIEWER";
@@ -255,6 +261,51 @@ ApplicationWindow {
         function removeRouteByFuel() {
             mapViewer.clearMapItems();
             mapViewer.addMapItem(mapViewer.myLocation);
+            mapViewer.addMapItem(mapViewer.myDirection);
+        }
+
+        function processRecordCtrlBtnState() {
+            switch(recordCtrlBtn.state) {
+            case "stopped":
+                recordCtrlBtn.state = "recording";
+                recordCtrlBtn.iconSource = "icon/recordPause.png";
+                saveRouteBtn.enabled = true;
+                positionSource.updateInterval = 3000;   // 3 seconds
+                createGpxFile();
+                break;
+            case "recording":
+                recordCtrlBtn.state = "pause";
+                recordCtrlBtn.iconSource = "icon/recordResume.png";
+                break;
+            case "pause":
+                recordCtrlBtn.state = "recording";
+                recordCtrlBtn.iconSource = "icon/recordPause.png";
+                break;
+            }
+        }
+
+        function processSaveRouteBtnState() {
+            switch(recordCtrlBtn.state) {
+            case "recording":
+            case "pause":
+                recordCtrlBtn.state = "stopped";
+                recordCtrlBtn.iconSource = "icon/recordStart.png";
+                saveRouteBtn.enabled = false;
+                closeGpxFile();
+                break;
+            }
+        }
+
+        function createGpxFile() {
+            // TODO: create a new Gpx file to recourd the route
+        }
+
+        function writeGpxFile(newCoordinate) {
+            // TODO: write the new coordinate into GPX file.
+        }
+
+        function closeGpxFile() {
+            // TODO: close the Gpx file
         }
     }
 }

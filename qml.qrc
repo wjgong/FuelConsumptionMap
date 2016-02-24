@@ -9,7 +9,7 @@
         <file>icon/recordPause.png</file>
         <file>icon/recordStart.png</file>
         <file>icon/recordStop.png</file>
-        <file>icon/saveRoute.png</file>
         <file>icon/myDirection.png</file>
+        <file>icon/recordResume.png</file>
     </qresource>
 </RCC>

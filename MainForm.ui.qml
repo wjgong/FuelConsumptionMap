@@ -17,6 +17,8 @@ Item {
     property alias routeInfoBtn: routeInfoBtn
     property alias routeInfoPanel: routeInfoPanel
     property alias modeSwitch: modeSwitch
+    property alias recordCtrlBtn: recordCtrlBtn
+    property alias saveRouteBtn: saveRouteBtn
 
     property real routeDistance: 0.0
     property real fuelConsumption: 0.0
@@ -68,6 +70,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.maximumHeight: loadRouteBtn.height
                     visible: false
+                    state: "stopped"
                 }
 
                 Button {
@@ -80,11 +83,12 @@ Item {
 
                 Button {
                     id: saveRouteBtn
-                    iconSource: "icon/saveRoute.png"
+                    iconSource: "icon/recordStop.png"
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
                     Layout.maximumHeight: loadRouteBtn.height
                     visible: false
+                    enabled: false
                 }
 
                 ToggleButton {
@@ -94,7 +98,7 @@ Item {
                     Layout.maximumHeight: loadRouteBtn.height
                     Text {
                         anchors.centerIn: parent
-                        text: qsTr("Route Info")
+                        text: qsTr("Route\n  Info")
                         font.pointSize: 9
                     }
                 }
@@ -106,7 +110,7 @@ Item {
                     Layout.maximumHeight: loadRouteBtn.height
                     Text {
                         anchors.centerIn: parent
-                        text: qsTr("Route Status")
+                        text: qsTr("Route\nStatus")
                         font.pointSize: 9
                     }
                     visible: false
