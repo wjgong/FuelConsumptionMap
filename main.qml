@@ -21,14 +21,14 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                if (mapViewer.state === "LOCATION") {
-                    mapViewer.myLocation.coordinate =
-                            positionSource.position.coordinate;
-                } else {
-                    mapViewer.myDirection.coordinate =
-                            positionSource.position.coordinate;
-                    if (mainForm.recordCtrlBtn.state === "recording")
-                        mainForm.writeGpxFile(positionSource.position.coordinate);
+                var coordinate = positionSource.position.coordinate;
+                mapViewer.myLocation.coordinate = coordinate;
+
+                mapViewer.myDirection.coordinate = coordinate;
+                if (mapViewer.state === "DIRECTION"
+                    && mainForm.recordCtrlBtn.state === "recording") {
+                    mapViewer.routePolyline.addCoordinate(coordinate);
+                    mainForm.writeGpxFile(coordinate);
                 }
             }
         }
@@ -92,8 +92,10 @@ ApplicationWindow {
                 }
             }
 
-            mapViewer.myLocation.coordinate = positionSource.position.coordinate;
-            mapViewer.center = positionSource.position.coordinate;
+            var coordinate = positionSource.position.coordinate;
+            mapViewer.myLocation.coordinate = coordinate;
+            mapViewer.myDirection.coordinate = coordinate;
+            mapViewer.center = coordinate;
         }
 
         myLocationBtn.onClicked: PropertyAnimation {
@@ -209,10 +211,10 @@ ApplicationWindow {
         }
 
         function cleanRoute() {
-            routePolyline.visible = false;
-            var path = routePolyline.path;
+            mapViewer.routePolyline.visible = false;
+            var path = mapViewer.routePolyline.path;
             path = [];
-            routePolyline.path = path;
+            mapViewer.routePolyline.path = path;
         }
 
         function renderRouteByFuel() {
@@ -267,11 +269,16 @@ ApplicationWindow {
         function processRecordCtrlBtnState() {
             switch(recordCtrlBtn.state) {
             case "stopped":
+                if (mapViewer.routePolyline.pathLength()) {
+                    cleanRoute();
+                }
+
                 recordCtrlBtn.state = "recording";
                 recordCtrlBtn.iconSource = "icon/recordPause.png";
                 saveRouteBtn.enabled = true;
                 positionSource.updateInterval = 3000;   // 3 seconds
                 createGpxFile();
+                mapViewer.routePolyline.visible = true;
                 break;
             case "recording":
                 recordCtrlBtn.state = "pause";

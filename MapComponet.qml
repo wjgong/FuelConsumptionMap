@@ -11,7 +11,7 @@ Map {
     plugin: Plugin {
         name: "osm"
     }
-    zoomLevel: 13
+    zoomLevel: 20
 
     gesture.enabled: true
     gesture.acceptedGestures: MapGestureArea.PinchGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
@@ -20,18 +20,24 @@ Map {
     MapQuickItem {
         id: myLocation
         sourceItem: Image {
+            id: iconMyLocation
             source: "icon/myLocation.svg"
         }
         antialiasing: true
+        anchorPoint.x: iconMyLocation.width/2
+        anchorPoint.y: iconMyLocation.height/2
     }
     MapQuickItem {
         id: myDirection
         sourceItem: Image {
+            id: iconMyDirection
             source: "icon/myDirection.png"
         }
         rotation: -45
         antialiasing: true
         visible: false
+        anchorPoint.x: iconMyDirection.width/2
+        anchorPoint.y: iconMyDirection.height/2
     }
 
     MapPolyline {
