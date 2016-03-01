@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtPositioning 5.6
 import QtLocation 5.6
+import QtSensors 5.3
 import QtQuick.Dialogs 1.2
 import QtQuick.XmlListModel 2.0
 import QtQml 2.2
@@ -29,6 +30,19 @@ ApplicationWindow {
                     && mainForm.recordCtrlBtn.state === "recording") {
                     mapViewer.routePolyline.addCoordinate(coordinate);
                     mainForm.writeGpxFile(coordinate);
+                }
+            }
+        }
+
+        Compass {
+            id: compass
+            active: true
+
+            property double azimuth: 0
+
+            onReadingChanged: {
+                if (mapViewer.state === "DIRECTION") {
+                    mapViewer.myDirection.rotation = reading.azimuth + 45;
                 }
             }
         }

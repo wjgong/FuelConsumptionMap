@@ -11,7 +11,7 @@ Map {
     plugin: Plugin {
         name: "osm"
     }
-    zoomLevel: 20
+    zoomLevel: 13
 
     gesture.enabled: true
     gesture.acceptedGestures: MapGestureArea.PinchGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
@@ -33,7 +33,6 @@ Map {
             id: iconMyDirection
             source: "icon/myDirection.png"
         }
-        rotation: -45
         antialiasing: true
         visible: false
         anchorPoint.x: iconMyDirection.width/2
