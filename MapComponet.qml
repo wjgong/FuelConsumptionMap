@@ -41,7 +41,7 @@ Map {
 
     MapPolyline {
         id: routePolyline
-        line.width: 3
+        line.width: 5
         line.color: 'green'
     }
 

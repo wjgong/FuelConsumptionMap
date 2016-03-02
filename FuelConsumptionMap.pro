@@ -1,10 +1,11 @@
 TEMPLATE = app
 
-QT += qml quick widgets network positioning location svg
+QT += qml quick widgets network positioning location svg xml
 
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    gpxwriter.cpp
 
 RESOURCES += qml.qrc
 
@@ -24,3 +25,6 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+HEADERS += \
+    gpxwriter.h

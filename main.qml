@@ -6,6 +6,7 @@ import QtSensors 5.3
 import QtQuick.Dialogs 1.2
 import QtQuick.XmlListModel 2.0
 import QtQml 2.2
+import tieto.project.fuelmap 1.0
 
 ApplicationWindow {
     visible: true
@@ -22,14 +23,15 @@ ApplicationWindow {
             active: true
             updateInterval: 120000 // 2 mins
             onPositionChanged:  {
-                var coordinate = positionSource.position.coordinate;
+                var coordinate = position.coordinate;
                 mapViewer.myLocation.coordinate = coordinate;
 
                 mapViewer.myDirection.coordinate = coordinate;
                 if (mapViewer.state === "DIRECTION"
-                    && mainForm.recordCtrlBtn.state === "recording") {
+                        && mainForm.recordCtrlBtn.state === "recording") {
+                    var currentDateTime = new Date();
                     mapViewer.routePolyline.addCoordinate(coordinate);
-                    mainForm.writeGpxFile(coordinate);
+                    mainForm.writeGpxFile(coordinate, position.timestamp);
                 }
             }
         }
@@ -258,7 +260,7 @@ ApplicationWindow {
 
             for (i = 0, l = subRoutes.length; i < l; i ++) {
                 var subRoute = subRoutes[i];
-                subRoute.line.width = 3;
+                subRoute.line.width = 5;
                 subRoute.line.color = mappingColor(subRoute.path[0].altitude);
                 mapViewer.addMapItem(subRoute);
                 subRoute.visible = true;
@@ -312,21 +314,27 @@ ApplicationWindow {
                 recordCtrlBtn.state = "stopped";
                 recordCtrlBtn.iconSource = "icon/recordStart.png";
                 saveRouteBtn.enabled = false;
+                positionSource.updateInterval = 12000;
                 closeGpxFile();
                 break;
             }
         }
 
         function createGpxFile() {
-            // TODO: create a new Gpx file to recourd the route
+            if (!GPXWriter.createFile())
+                console.log("create gpx file failed");
         }
 
-        function writeGpxFile(newCoordinate) {
-            // TODO: write the new coordinate into GPX file.
+        function writeGpxFile(newCoordinate, timeStamp) {
+            console.log("newCoordinate:",
+                        newCoordinate.latitude, newCoordinate.longitude, newCoordinate.altitude);
+            GPXWriter.writeCoordinate(newCoordinate.latitude,
+                                      newCoordinate.longitude,
+                                      newCoordinate.altitude, timeStamp);
         }
 
         function closeGpxFile() {
-            // TODO: close the Gpx file
+            GPXWriter.closeFile();
         }
     }
 }
