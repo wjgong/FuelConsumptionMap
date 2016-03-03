@@ -31,7 +31,7 @@ ApplicationWindow {
                         && mainForm.recordCtrlBtn.state === "recording") {
                     var currentDateTime = new Date();
                     mapViewer.routePolyline.addCoordinate(coordinate);
-                    mainForm.writeGpxFile(coordinate, position.timestamp);
+                    mainForm.writeGpxFile(positionSource.position);
                 }
             }
         }
@@ -325,12 +325,18 @@ ApplicationWindow {
                 console.log("create gpx file failed");
         }
 
-        function writeGpxFile(newCoordinate, timeStamp) {
+        function writeGpxFile(position) {
+            var newCoordinate = position.coordinate;
             console.log("newCoordinate:",
                         newCoordinate.latitude, newCoordinate.longitude, newCoordinate.altitude);
-            GPXWriter.writeCoordinate(newCoordinate.latitude,
-                                      newCoordinate.longitude,
-                                      newCoordinate.altitude, timeStamp);
+
+            if (position.latitudeValid && position.longitudeValid) {
+                var correctedAltitude = position.altitudeValid ? newCoordinate.altitude : 0;
+                GPXWriter.writeCoordinate(newCoordinate.latitude,
+                                          newCoordinate.longitude,
+                                          correctedAltitude,
+                                          position.timestamp);
+            }
         }
 
         function closeGpxFile() {

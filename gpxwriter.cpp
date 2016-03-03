@@ -22,7 +22,7 @@ bool GpxWriter::createFile()
     xmlWriter.writeStartElement("gpx");
     xmlWriter.writeAttribute("version", "1.0");
     xmlWriter.writeAttribute("creator", "wenjie.gong@tieto.com");
-    xmlWriter.writeDefaultNamespace("http://www.tieto.com");
+    xmlWriter.writeDefaultNamespace("http://www.topografix.com/GPX/1/1");
 
     xmlWriter.writeStartElement("metadata");
     xmlWriter.writeTextElement("name", fileName);
