@@ -72,6 +72,7 @@ ApplicationWindow {
             XmlRole { name: "lon";  query: "@lon/number()" }
             XmlRole { name: "ele";  query: "ele/number()" }
             XmlRole { name: "time"; query: "time/string()"}
+            XmlRole { name: "fuel"; query: "fuel/number()"}
 
             onStatusChanged: {
                 switch(status) {
@@ -81,9 +82,11 @@ ApplicationWindow {
 
                 case XmlListModel.Ready:
                     console.log("display the route on the map", count);
-                    mainForm.calculateRouteInfo(routeModel);
-                    mainForm.removeRouteByFuel();
-                    mainForm.renderRouteByFuel();
+                    if (count) {
+                        mainForm.calculateRouteInfo(routeModel);
+                        mainForm.removeColoredRoute();
+                        mainForm.renderRouteByAltitude();
+                    }
                     mainForm.loadingIndicator.running = false;
                     break;
 
@@ -124,7 +127,7 @@ ApplicationWindow {
 
         cleanRouteBtn.onClicked: {
             resetRouteInfo();
-            removeRouteByFuel();
+            removeColoredRoute();
         }
 
         recordCtrlBtn.onClicked: processRecordCtrlBtnState()
@@ -233,24 +236,31 @@ ApplicationWindow {
             mapViewer.routePolyline.path = path;
         }
 
-        function renderRouteByFuel() {
+        function renderRouteByAltitude() {
             var subRoutes = [];
             var j = 0;
-            var fuel = routeModel.get(0).ele
+            var ele = routeModel.get(0).ele
+            var minEle = ele;
+            var maxEle = ele;
 
-            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
+            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 5}',
                                               mapViewer);
             for (var i = 0, l = routeModel.count; i < l; i ++) {
                 var coordinate;
                 var routePoint = routeModel.get(i);
-                if (fuel !== routePoint.ele) {
+                if (ele !== routePoint.ele) {
                     coordinate = QtPositioning.coordinate(routePoint.lat,
                                                           routePoint.lon,
                                                           routePoint.ele);
                     subRoutes[j].addCoordinate(coordinate);
-                    fuel = routePoint.ele;
-                    subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 3}',
+                    ele = routePoint.ele;
+                    subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 5}',
                                                         mapViewer);
+
+                    if (ele < minEle)
+                        minEle = ele;
+                    if (ele > maxEle)
+                        maxEle = ele;
                 }
                 coordinate = QtPositioning.coordinate(routePoint.lat,
                                                       routePoint.lon,
@@ -261,7 +271,8 @@ ApplicationWindow {
             for (i = 0, l = subRoutes.length; i < l; i ++) {
                 var subRoute = subRoutes[i];
                 subRoute.line.width = 5;
-                subRoute.line.color = mappingColor(subRoute.path[0].altitude);
+                subRoute.line.color = mapAltitudeToColor(subRoute.path[0].altitude,
+                                                         minEle, maxEle);
                 mapViewer.addMapItem(subRoute);
                 subRoute.visible = true;
             }
@@ -269,14 +280,19 @@ ApplicationWindow {
             mapViewer.fitViewportToMapItems();
         }
 
-        function mappingColor(fuel) {
+        function mapAltitudeToColor(altitude, minAltitude, maxAltitude) {
             var colors = ["blue", "steelblue", "springgreen", "green",
                           "greenyellow", "yellow", "darkorange", "saddlebrown",
                           "maroon", "red"];
-            return colors[fuel % 10];
+            console.log("alt, min, max", altitude, minAltitude, maxAltitude);
+            return colors[Math.floor(9 * (altitude - minAltitude)/(maxAltitude - minAltitude))];
         }
 
-        function removeRouteByFuel() {
+        function renderRouteByFuel() {
+
+        }
+
+        function removeColoredRoute() {
             mapViewer.clearMapItems();
             mapViewer.addMapItem(mapViewer.myLocation);
             mapViewer.addMapItem(mapViewer.myDirection);
@@ -332,10 +348,14 @@ ApplicationWindow {
 
             if (position.latitudeValid && position.longitudeValid) {
                 var correctedAltitude = position.altitudeValid ? newCoordinate.altitude : 0;
+                // TODO: get fuel consumption from CAN bus
+                var fuel = 8.8 + (Math.random() * 4 - 4);
+                fuel = Math.round(fuel * 10) / 10;
+                console.log("fuel = ", fuel);
                 GPXWriter.writeCoordinate(newCoordinate.latitude,
                                           newCoordinate.longitude,
                                           correctedAltitude,
-                                          position.timestamp);
+                                          position.timestamp, fuel);
             }
         }
 

@@ -14,7 +14,7 @@ public:
     explicit GpxWriter(QObject *parent = 0);
     Q_INVOKABLE bool createFile();
     Q_INVOKABLE bool writeCoordinate(double latitude, double longitude,
-                                     double altitude, QDateTime timeStamp);
+                                     double altitude, QDateTime timeStamp, float fuel);
     Q_INVOKABLE void closeFile();
 
 signals:

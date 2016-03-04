@@ -37,7 +37,7 @@ bool GpxWriter::createFile()
 }
 
 bool GpxWriter::writeCoordinate(double latitude, double longitude,
-                                double altitude, QDateTime timeStamp)
+                                double altitude, QDateTime timeStamp, float fuel)
 {
     if (!xmlFile.isWritable())
         return false;
@@ -47,6 +47,7 @@ bool GpxWriter::writeCoordinate(double latitude, double longitude,
     xmlWriter.writeAttribute("lon", QVariant(longitude).toString());
     xmlWriter.writeTextElement("ele", QVariant(altitude).toString());
     xmlWriter.writeTextElement("time", timeStamp.toUTC().toString(Qt::ISODate));
+    xmlWriter.writeTextElement("fuel", QVariant(fuel).toString());
     xmlWriter.writeEndElement();    // end "trkpt"
 
     return true;
