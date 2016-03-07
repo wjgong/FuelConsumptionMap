@@ -85,7 +85,10 @@ ApplicationWindow {
                     if (count) {
                         mainForm.calculateRouteInfo(routeModel);
                         mainForm.removeColoredRoute();
-                        mainForm.renderRouteByAltitude();
+                        if (typeof routeModel.get(0).fuel === "string")
+                            mainForm.renderRouteByAltitude();
+                        else
+                            mainForm.renderRouteByFuel();
                     }
                     mainForm.loadingIndicator.running = false;
                     break;
@@ -239,7 +242,7 @@ ApplicationWindow {
         function renderRouteByAltitude() {
             var subRoutes = [];
             var j = 0;
-            var ele = routeModel.get(0).ele
+            var ele = routeModel.get(0).ele;
             var minEle = ele;
             var maxEle = ele;
 
@@ -284,12 +287,61 @@ ApplicationWindow {
             var colors = ["blue", "steelblue", "springgreen", "green",
                           "greenyellow", "yellow", "darkorange", "saddlebrown",
                           "maroon", "red"];
-            console.log("alt, min, max", altitude, minAltitude, maxAltitude);
             return colors[Math.floor(9 * (altitude - minAltitude)/(maxAltitude - minAltitude))];
         }
 
         function renderRouteByFuel() {
+            var subRoutes = [];
+            var j = 0;
+            var fuel = routeModel.get(0).fuel;
 
+            subRoutes[0] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 5}',
+                                              mapViewer);
+            for (var i = 0, l = routeModel.count; i < l; i ++) {
+                var coordinate;
+                var routePoint = routeModel.get(i);
+                if (fuel !== routePoint.fuel) {
+                    coordinate = QtPositioning.coordinate(routePoint.lat,
+                                                          routePoint.lon,
+                                                          routePoint.ele);
+                    subRoutes[j].addCoordinate(coordinate);
+                    subRoutes[j].line.width = 5;
+                    subRoutes[j].line.color = mapFuelToColor(fuel);
+                    mapViewer.addMapItem(subRoutes[j]);
+                    subRoutes[j].visible = true;
+
+                    fuel = routePoint.fuel;
+                    subRoutes[++j] = Qt.createQmlObject('import QtLocation 5.6; MapPolyline {width: 5}',
+                                                        mapViewer);
+                }
+                coordinate = QtPositioning.coordinate(routePoint.lat,
+                                                      routePoint.lon,
+                                                      routePoint.ele);
+                subRoutes[j].addCoordinate(coordinate);
+            }
+
+            subRoutes[j].line.width = 5;
+            subRoutes[j].line.color = mapFuelToColor(fuel);
+            mapViewer.addMapItem(subRoutes[j]);
+            subRoutes[j].visible = true;
+
+            mapViewer.fitViewportToMapItems();
+        }
+
+        function mapFuelToColor(fuel) {
+            var colors = ["blue", "steelblue", "springgreen", "green",
+                          "greenyellow", "yellow", "darkorange", "saddlebrown",
+                          "maroon", "red"];
+            var color = "green";
+
+            if (fuel < 5)
+                color = colors[0];
+            else if (fuel >= 5 && fuel < 13)
+                color = colors[Math.floor(fuel - 4)];
+            else if (fuel >= 13)
+                color = colors[9];
+
+            return color;
         }
 
         function removeColoredRoute() {
