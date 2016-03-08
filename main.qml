@@ -137,7 +137,7 @@ ApplicationWindow {
 
         saveRouteBtn.onClicked: processSaveRouteBtnState()
 
-        routeInfoBtn.onClicked: showRouteInfoPanel(routeInfoBtn.checked)
+        routeInfoSwitch.onCheckedChanged: showRouteInfoPanel(routeInfoSwitch.checked)
 
         modeSwitch.onCheckedChanged: {
             if (modeSwitch.checked === false) {

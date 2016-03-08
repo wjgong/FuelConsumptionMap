@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.2
 import QtQuick.Extras 1.4
 
 Item {
+    id: rootItem
     width: 1280
     height: 720
     state: "ROUTE_VIEWER"
@@ -14,7 +15,7 @@ Item {
     property alias myLocationBtn: myLocationBtn
     property alias loadRouteBtn: loadRouteBtn
     property alias cleanRouteBtn: cleanRouteBtn
-    property alias routeInfoBtn: routeInfoBtn
+    property alias routeInfoSwitch: routeInfoSwitch
     property alias routeInfoPanel: routeInfoPanel
     property alias modeSwitch: modeSwitch
     property alias recordCtrlBtn: recordCtrlBtn
@@ -27,128 +28,211 @@ Item {
 
     RowLayout {
         id: mainLayout
-        anchors.rightMargin: 5
-        anchors.leftMargin: 5
-        anchors.bottomMargin: 5
-        anchors.topMargin: 5
         anchors.fill: parent
-        spacing: 6
+        spacing: 0
 
         Rectangle {
             id: ctrlPanel
-            color: 'lightsteelblue'
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.maximumWidth: 200
+            color: 'black'
+            width: rootItem.width/6
+            height: rootItem.height
 
-            ColumnLayout {
+            Column {
                 id: ctrlPanelLayout
-                anchors.rightMargin: 5
-                anchors.leftMargin: 5
-                anchors.bottomMargin: 5
-                anchors.topMargin: 5
+                spacing: 0
+
                 anchors.fill: parent
 
                 Button {
                     id: myLocationBtn
-                    iconSource: "icon/myLocation.svg"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.fillWidth: true
+                    width: parent.width
+                    height: parent.height/5
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: "black"
+                            border.color: "gray"
+                            border.width: 3
+                        }
+
+                        label: Text {
+                            text: qsTr("Locate")
+                            color: "white"
+                            font.bold: true
+                            font.pointSize: 20
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
                 }
 
                 Button {
                     id: loadRouteBtn
-                    iconSource: "icon/routes.svg"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.fillWidth: true
+                    width: parent.width
+                    height: parent.height/5
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: "black"
+                            border.color: "gray"
+                            border.width: 3
+                        }
+
+                        label: Text {
+                            text: qsTr("Load\nRoute")
+                            color: "white"
+                            font.bold: true
+                            font.pointSize: 20
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                }
+
+                Button {
+                    id: cleanRouteBtn
+                    width: parent.width
+                    height: parent.height/5
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: "black"
+                            border.color: "gray"
+                            border.width: 3
+                        }
+
+                        label: Text {
+                            text: qsTr("Remove\nRoute")
+                            color: "white"
+                            font.bold: true
+                            font.pointSize: 20
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                }
+
+                Switch {
+                    id: routeInfoSwitch
+                    width: parent.width
+                    height: parent.height/5
+                    checked: false
+                    style: SwitchStyle {
+                        padding.top: -8
+                        padding.bottom: -8
+                        groove: Rectangle {
+                            width: control.width-40
+                            height: control.height/3
+                            x: 20
+                            color: control.checked ? "yellow" : "black"
+                            border.color: "white"
+                            border.width: 4
+                        }
+                        handle: Rectangle {
+                            color: "white"
+                            border.color: "black"
+                            border.width: 4
+                            width: control.width/4
+                            x: 20
+                        }
+                    }
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "black"
+                        border.color: "gray"
+                        border.width: 3
+                        z: -1
+                    }
+                    Text {
+                        text: qsTr("Route Info")
+                        x: 20
+                        color: "white"
+                        font.pointSize: 13
+                        font.bold: true
+                        z: 1
+                    }
+                }
+
+                Switch {
+                    id: modeSwitch
+                    width: parent.width
+                    height: parent.height/5
+                    checked: false
+                    style: SwitchStyle {
+                        padding.top: -8
+                        padding.bottom: -8
+                        groove: Rectangle {
+                            width: control.width-40
+                            height: control.height/3
+                            x: 20
+                            color: control.checked ? "yellow" : "black"
+                            border.color: "white"
+                            border.width: 4
+                        }
+                        handle: Rectangle {
+                            color: "white"
+                            border.color: "black"
+                            border.width: 4
+                            width: control.width/4
+                            x: 20
+                        }
+                    }
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "black"
+                        border.color: "gray"
+                        border.width: 3
+                        z: -1
+                    }
+                    Text {
+                        text: qsTr("Recording Mode")
+                        x: 20
+                        color: "white"
+                        font.pointSize: 13
+                        font.bold: true
+                        z: 1
+                    }
                 }
 
                 Button {
                     id: recordCtrlBtn
                     iconSource: "icon/recordStart.png"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.fillWidth: true
-                    Layout.maximumHeight: loadRouteBtn.height
+                    width: parent.width
+                    height: parent.height/5
                     visible: false
                     state: "stopped"
                 }
 
                 Button {
-                    id: cleanRouteBtn
-                    iconSource: "icon/cleanRoute.png"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.fillWidth: true
-                    Layout.maximumHeight: loadRouteBtn.height
-                }
-
-                Button {
                     id: saveRouteBtn
                     iconSource: "icon/recordStop.png"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.fillWidth: true
-                    Layout.maximumHeight: loadRouteBtn.height
+                    width: parent.width
+                    height: parent.height/5
                     visible: false
                     enabled: false
                 }
 
-                ToggleButton {
-                    id: routeInfoBtn
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.maximumWidth: ctrlPanel.width/2
-                    Layout.maximumHeight: loadRouteBtn.height
-                    Text {
-                        anchors.centerIn: parent
-                        text: qsTr("Route\n  Info")
-                        font.pointSize: 9
-                    }
-                }
+                //                ToggleButton {
+                //                    id: routeInfoBtn
+                //                    anchors.horizontalCenter: parent.horizontalCenter
+                //                    Layout.maximumWidth: ctrlPanel.width/2
+                //                    Layout.maximumHeight: loadRouteBtn.height
+                //                    Text {
+                //                        anchors.centerIn: parent
+                //                        text: qsTr("Route\n  Info")
+                //                        font.pointSize: 9
+                //                    }
+                //                }
 
                 ToggleButton {
                     id: routeStatusBtn
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Layout.maximumWidth: ctrlPanel.width/2
-                    Layout.maximumHeight: loadRouteBtn.height
+                    width: parent.width
                     Text {
                         anchors.centerIn: parent
                         text: qsTr("Route\nStatus")
                         font.pointSize: 9
                     }
                     visible: false
-                }
-
-                Switch {
-                    id: modeSwitch
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
-                    checked: false
-                    style: SwitchStyle {
-                        groove: Rectangle {
-                            implicitWidth: loadRouteBtn.width/2
-                            implicitHeight: loadRouteBtn.height/2
-                            radius: 9
-                            color: "slategray"
-                            border.color: control.activeFocus ? "darkblue" : "gray"
-                            border.width: 1
-                        }
-                        handle: Rectangle {
-                            color: "red"
-                            border.color: "black"
-                            implicitWidth: loadRouteBtn.width/4
-                            implicitHeight: loadRouteBtn.height/2
-                            radius: 9
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: "grey"}
-                                GradientStop { position: 0.5; color: "red"}
-                                GradientStop { position: 1.0; color: "grey"}
-                            }
-                            rotation: 90
-                        }
-                    }
-                    Text {
-                        anchors.left: parent.right
-                        text: qsTr(" Recording\n Mode")
-                        font.pointSize: 10
-                    }
                 }
             }
         }
@@ -317,11 +401,11 @@ Item {
     states: [
         State {
             name: "ROUTE_VIEWER"
-            PropertyChanges { target: myLocationBtn; iconSource: "icon/myLocation.svg" }
+            //            PropertyChanges { target: myLocationBtn; iconSource: "icon/myLocation.svg" }
 
             PropertyChanges { target: loadRouteBtn; visible: true }
             PropertyChanges { target: cleanRouteBtn; visible: true }
-            PropertyChanges { target: routeInfoBtn; visible: true }
+            PropertyChanges { target: routeInfoSwitch; visible: true }
             PropertyChanges { target: routeInfoPanel; visible: true }
             PropertyChanges { target: fuelConsumptionColorTbl; visible: true }
 
@@ -331,11 +415,11 @@ Item {
         },
         State {
             name: "RECORDING"
-            PropertyChanges { target: myLocationBtn; iconSource: "icon/myDirection.png" }
+            //            PropertyChanges { target: myLocationBtn; iconSource: "icon/myDirection.png" }
 
             PropertyChanges { target: loadRouteBtn; visible: false }
             PropertyChanges { target: cleanRouteBtn; visible: false }
-            PropertyChanges { target: routeInfoBtn; visible: false }
+            PropertyChanges { target: routeInfoSwitch; visible: false }
             PropertyChanges { target: routeInfoPanel; visible: false }
             PropertyChanges { target: fuelConsumptionColorTbl; visible: false }
 
