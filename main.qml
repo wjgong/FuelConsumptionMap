@@ -37,9 +37,7 @@ ApplicationWindow {
 
         Compass {
             id: compass
-            active: true
-
-            property double azimuth: 0
+            active: false
 
             onReadingChanged: {
                 if (mapViewer.state === "DIRECTION") {
@@ -82,12 +80,14 @@ ApplicationWindow {
                 case XmlListModel.Ready:
                     console.log("display the route on the map", count);
                     if (count) {
-                        mainForm.calculateRouteInfo(routeModel);
                         mainForm.removeColoredRoute();
+
                         if (typeof routeModel.get(0).fuel === "string")
                             mainForm.renderRouteByAltitude();
                         else
                             mainForm.renderRouteByFuel();
+
+                        mainForm.calculateRouteInfo(routeModel);
                     }
                     mainForm.loadingIndicator.running = false;
                     break;
@@ -142,10 +142,12 @@ ApplicationWindow {
                 console.log("state from RECORDING to ROUTE_VIEWER");
                 mainForm.state = "ROUTE_VIEWER";
                 mapViewer.state = "LOCATION";
+                compass.active = false;
             } else {
                 console.log("state from ROUTE_VIEWER to RECORDING");
                 mainForm.state = "RECORDING";
                 mapViewer.state = "DIRECTION";
+                compass.active = true;
             }
         }
 

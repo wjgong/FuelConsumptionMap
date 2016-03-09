@@ -288,7 +288,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "saddlebrown";         width: 50; height: mapPanel.height/10
+                    color: "saddlebrown";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "11"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -296,7 +297,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "darkorange";         width: 50; height: mapPanel.height/10
+                    color: "darkorange";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "10"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -304,7 +306,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "yellow";         width: 50; height: mapPanel.height/10
+                    color: "yellow";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "9"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -312,7 +315,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "greenyellow";         width: 50; height: mapPanel.height/10
+                    color: "greenyellow";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "8"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -320,7 +324,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "green";         width: 50; height: mapPanel.height/10
+                    color: "green";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "7"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -328,7 +333,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "springgreen";         width: 50; height: mapPanel.height/10
+                    color: "springgreen";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "6"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -336,7 +342,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "steelblue";         width: 50; height: mapPanel.height/10
+                    color: "steelblue";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "5"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -344,7 +351,8 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: "blue";         width: 50; height: mapPanel.height/10
+                    color: "blue";
+                    width: 50; height: mapPanel.height/10
                     Text {
                         text: "<5"
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -380,6 +388,15 @@ Item {
                     }
 
                     Text {
+                        id: avgSpeedLabel
+                        text: qsTr("Average Speed: ")
+                    }
+                    Text {
+                        id: avgSpeedValue
+                        text: averageSpeed + "km/h"
+                    }
+
+                    Text {
                         id: fuelConspLabel
                         text: qsTr("Fuel Consumption: ")
                     }
@@ -395,15 +412,6 @@ Item {
                     Text {
                         id: amountFuelValue
                         text: amountOfFuel + "L"
-                    }
-
-                    Text {
-                        id: avgSpeedLabel
-                        text: qsTr("Average Speed: ")
-                    }
-                    Text {
-                        id: avgSpeedValue
-                        text: averageSpeed + "km/h"
                     }
                 }
             }
