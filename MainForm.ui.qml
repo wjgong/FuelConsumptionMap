@@ -50,7 +50,7 @@ Item {
 
                     style: ButtonStyle {
                         background: Rectangle {
-                            color: "black"
+                            color: control.pressed ? "yellow" : "black"
                             border.color: "gray"
                             border.width: 3
                         }
@@ -73,7 +73,7 @@ Item {
 
                     style: ButtonStyle {
                         background: Rectangle {
-                            color: "black"
+                            color: control.pressed ? "yellow" : "black"
                             border.color: "gray"
                             border.width: 3
                         }
@@ -96,7 +96,7 @@ Item {
 
                     style: ButtonStyle {
                         background: Rectangle {
-                            color: "black"
+                            color: control.pressed ? "yellow" : "black"
                             border.color: "gray"
                             border.width: 3
                         }
@@ -104,6 +104,57 @@ Item {
                         label: Text {
                             text: qsTr("Remove\nRoute")
                             color: "white"
+                            font.bold: true
+                            font.pointSize: 20
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                }
+
+                Button {
+                    id: recordCtrlBtn
+                    width: parent.width
+                    height: parent.height/5
+                    visible: false
+                    state: "stopped"
+                    text: qsTr("Start")
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: control.pressed ? "yellow" : "black"
+                            border.color: "gray"
+                            border.width: 3
+                        }
+
+                        label: Text {
+                            text: control.text
+                            color: "white"
+                            font.bold: true
+                            font.pointSize: 20
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                }
+
+                Button {
+                    id: saveRouteBtn
+                    width: parent.width
+                    height: parent.height/5
+                    visible: false
+                    enabled: false
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: control.pressed ? "yellow" : "black"
+                            border.color: "gray"
+                            border.width: 3
+                        }
+
+                        label: Text {
+                            text: qsTr("Save")
+                            color: control.enabled ? "white" : "gray"
                             font.bold: true
                             font.pointSize: 20
                             verticalAlignment: Text.AlignVCenter
@@ -146,6 +197,7 @@ Item {
                     Text {
                         text: qsTr("Route Info")
                         x: 20
+                        y: 5
                         color: "white"
                         font.pointSize: 13
                         font.bold: true
@@ -187,52 +239,12 @@ Item {
                     Text {
                         text: qsTr("Recording Mode")
                         x: 20
+                        y: 5
                         color: "white"
                         font.pointSize: 13
                         font.bold: true
                         z: 1
                     }
-                }
-
-                Button {
-                    id: recordCtrlBtn
-                    iconSource: "icon/recordStart.png"
-                    width: parent.width
-                    height: parent.height/5
-                    visible: false
-                    state: "stopped"
-                }
-
-                Button {
-                    id: saveRouteBtn
-                    iconSource: "icon/recordStop.png"
-                    width: parent.width
-                    height: parent.height/5
-                    visible: false
-                    enabled: false
-                }
-
-                //                ToggleButton {
-                //                    id: routeInfoBtn
-                //                    anchors.horizontalCenter: parent.horizontalCenter
-                //                    Layout.maximumWidth: ctrlPanel.width/2
-                //                    Layout.maximumHeight: loadRouteBtn.height
-                //                    Text {
-                //                        anchors.centerIn: parent
-                //                        text: qsTr("Route\n  Info")
-                //                        font.pointSize: 9
-                //                    }
-                //                }
-
-                ToggleButton {
-                    id: routeStatusBtn
-                    width: parent.width
-                    Text {
-                        anchors.centerIn: parent
-                        text: qsTr("Route\nStatus")
-                        font.pointSize: 9
-                    }
-                    visible: false
                 }
             }
         }
@@ -343,13 +355,13 @@ Item {
 
             Rectangle {
                 id: routeInfoPanel
-                color: "lightsteelblue"
+                color: "white"
                 width: routeInfoGrid.width
                 height: routeInfoGrid.height
                 anchors.right: fuelConsumptionColorTbl.left
                 y: -height
                 z: 1
-                opacity: 0.5
+                opacity: 0.6
 
                 Grid {
                     id: routeInfoGrid
@@ -401,32 +413,23 @@ Item {
     states: [
         State {
             name: "ROUTE_VIEWER"
-            //            PropertyChanges { target: myLocationBtn; iconSource: "icon/myLocation.svg" }
 
             PropertyChanges { target: loadRouteBtn; visible: true }
             PropertyChanges { target: cleanRouteBtn; visible: true }
-            PropertyChanges { target: routeInfoSwitch; visible: true }
-            PropertyChanges { target: routeInfoPanel; visible: true }
             PropertyChanges { target: fuelConsumptionColorTbl; visible: true }
 
             PropertyChanges { target: recordCtrlBtn; visible: false }
             PropertyChanges { target: saveRouteBtn; visible: false }
-            PropertyChanges { target: routeStatusBtn; visible: false }
         },
         State {
             name: "RECORDING"
-            //            PropertyChanges { target: myLocationBtn; iconSource: "icon/myDirection.png" }
 
             PropertyChanges { target: loadRouteBtn; visible: false }
             PropertyChanges { target: cleanRouteBtn; visible: false }
-            PropertyChanges { target: routeInfoSwitch; visible: false }
-            PropertyChanges { target: routeInfoPanel; visible: false }
             PropertyChanges { target: fuelConsumptionColorTbl; visible: false }
 
             PropertyChanges { target: recordCtrlBtn; visible: true }
             PropertyChanges { target: saveRouteBtn; visible: true }
-            PropertyChanges { target: routeStatusBtn; visible: true }
         }
-
     ]
 }

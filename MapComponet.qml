@@ -4,7 +4,6 @@ import QtLocation 5.6
 
 Map {
     property alias myLocation: myLocation
-    property alias myDirection: myDirection
     property alias routePolyline: routePolyline
 
     anchors.fill: parent
@@ -12,6 +11,7 @@ Map {
         name: "osm"
     }
     zoomLevel: 13
+    state: "LOCATION"
 
     gesture.enabled: true
     gesture.acceptedGestures: MapGestureArea.PinchGesture | MapGestureArea.PanGesture | MapGestureArea.FlickGesture
@@ -27,17 +27,6 @@ Map {
         anchorPoint.x: iconMyLocation.width/2
         anchorPoint.y: iconMyLocation.height/2
     }
-    MapQuickItem {
-        id: myDirection
-        sourceItem: Image {
-            id: iconMyDirection
-            source: "icon/myDirection.png"
-        }
-        antialiasing: true
-        visible: false
-        anchorPoint.x: iconMyDirection.width/2
-        anchorPoint.y: iconMyDirection.height/2
-    }
 
     MapPolyline {
         id: routePolyline
@@ -48,13 +37,12 @@ Map {
     states: [
         State {
             name: "LOCATION"
-            PropertyChanges { target: myLocation; visible: true }
-            PropertyChanges { target: myDirection; visible: false }
+            PropertyChanges { target: iconMyLocation; source: "icon/myLocation.svg"}
+            PropertyChanges { target: myLocation; rotation: 0}
         },
         State {
             name: "DIRECTION"
-            PropertyChanges { target: myLocation; visible: false }
-            PropertyChanges { target: myDirection; visible: true }
+            PropertyChanges { target: iconMyLocation; source: "icon/myDirection.png"}
         }
     ]
 }

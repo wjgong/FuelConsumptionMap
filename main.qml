@@ -26,7 +26,6 @@ ApplicationWindow {
                 var coordinate = position.coordinate;
                 mapViewer.myLocation.coordinate = coordinate;
 
-                mapViewer.myDirection.coordinate = coordinate;
                 if (mapViewer.state === "DIRECTION"
                         && mainForm.recordCtrlBtn.state === "recording") {
                     var currentDateTime = new Date();
@@ -44,7 +43,7 @@ ApplicationWindow {
 
             onReadingChanged: {
                 if (mapViewer.state === "DIRECTION") {
-                    mapViewer.myDirection.rotation = reading.azimuth + 45;
+                    mapViewer.myLocation.rotation = reading.azimuth + 45;
                 }
             }
         }
@@ -116,7 +115,6 @@ ApplicationWindow {
 
             var coordinate = positionSource.position.coordinate;
             mapViewer.myLocation.coordinate = coordinate;
-            mapViewer.myDirection.coordinate = coordinate;
             mapViewer.center = coordinate;
         }
 
@@ -347,7 +345,6 @@ ApplicationWindow {
         function removeColoredRoute() {
             mapViewer.clearMapItems();
             mapViewer.addMapItem(mapViewer.myLocation);
-            mapViewer.addMapItem(mapViewer.myDirection);
         }
 
         function processRecordCtrlBtnState() {
@@ -358,7 +355,7 @@ ApplicationWindow {
                 }
 
                 recordCtrlBtn.state = "recording";
-                recordCtrlBtn.iconSource = "icon/recordPause.png";
+                recordCtrlBtn.text = qsTr("Pause");
                 saveRouteBtn.enabled = true;
                 positionSource.updateInterval = 3000;   // 3 seconds
                 createGpxFile();
@@ -366,11 +363,11 @@ ApplicationWindow {
                 break;
             case "recording":
                 recordCtrlBtn.state = "pause";
-                recordCtrlBtn.iconSource = "icon/recordResume.png";
+                recordCtrlBtn.text = qsTr("Resume");
                 break;
             case "pause":
                 recordCtrlBtn.state = "recording";
-                recordCtrlBtn.iconSource = "icon/recordPause.png";
+                recordCtrlBtn.text = qsTr("Pause");
                 break;
             }
         }
@@ -380,7 +377,7 @@ ApplicationWindow {
             case "recording":
             case "pause":
                 recordCtrlBtn.state = "stopped";
-                recordCtrlBtn.iconSource = "icon/recordStart.png";
+                recordCtrlBtn.text = qsTr("Start");
                 saveRouteBtn.enabled = false;
                 positionSource.updateInterval = 12000;
                 closeGpxFile();
