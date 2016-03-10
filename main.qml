@@ -148,6 +148,8 @@ ApplicationWindow {
                 mainForm.state = "RECORDING";
                 mapViewer.state = "DIRECTION";
                 compass.active = true;
+                resetRouteInfo();
+                removeColoredRoute();
             }
         }
 
@@ -191,21 +193,40 @@ ApplicationWindow {
         function calculateRouteInfo(routeGpxModel) {
             var startPoint;
             var endPoint;
+            var hasFuel = false;
 
             routeDistance = 0;
+            if (typeof routeGpxModel.get(0).fuel != "string")
+                hasFuel = true;
+            amountOfFuel = 0;
+
             var length = routeGpxModel.count - 1;
             for (var i = 0; i < length; i++) {
-                startPoint = QtPositioning.coordinate(routeGpxModel.get(i).lat,
-                                                      routeGpxModel.get(i).lon);
-                endPoint = QtPositioning.coordinate(routeGpxModel.get(i+1).lat,
-                                                    routeGpxModel.get(i+1).lon);
-                routeDistance += startPoint.distanceTo(endPoint);
+                var gpxPointStart = routeGpxModel.get(i);
+                var gpxPointEnd = routeGpxModel.get(i+1);
+
+                startPoint = QtPositioning.coordinate(gpxPointStart.lat,
+                                                      gpxPointStart.lon);
+                endPoint = QtPositioning.coordinate(gpxPointEnd.lat,
+                                                    gpxPointEnd.lon);
+
+                var distance = startPoint.distanceTo(endPoint)
+                routeDistance += distance;
+
+                if (hasFuel) {
+                    amountOfFuel +=
+                            distance * (gpxPointStart.fuel + gpxPointEnd.fuel)/2;
+                }
             }
             routeDistance = Math.round(routeDistance/1000);
 
-            fuelConsumption = 8.8;
-
-            amountOfFuel = (fuelConsumption * routeDistance / 100).toFixed(3);
+            if (hasFuel) {
+                amountOfFuel = (amountOfFuel / (1000 * 100)).toFixed(3);
+                fuelConsumption = amountOfFuel / routeDistance * 100;
+            } else {
+                fuelConsumption = 8.8;
+                amountOfFuel = (fuelConsumption * routeDistance / 100).toFixed(3);
+            }
 
             var startTime = new Date(routeGpxModel.get(0).time);
             var endTime = new Date(routeGpxModel.get(length).time);
@@ -400,13 +421,15 @@ ApplicationWindow {
             if (position.latitudeValid && position.longitudeValid) {
                 var correctedAltitude = position.altitudeValid ? newCoordinate.altitude : 0;
                 // TODO: get fuel consumption from CAN bus
-                var fuel = 8.8 + (Math.random() * 4 - 4);
+                var fuel = Number.NaN;
+                fuel = 8.8 + (Math.random() * 4 - 4);
                 fuel = Math.round(fuel * 10) / 10;
                 console.log("fuel = ", fuel);
-                GPXWriter.writeCoordinate(newCoordinate.latitude,
-                                          newCoordinate.longitude,
-                                          correctedAltitude,
-                                          position.timestamp, fuel);
+                if (fuel != Number.NaN)
+                    GPXWriter.writeCoordinate(newCoordinate.latitude,
+                                              newCoordinate.longitude,
+                                              correctedAltitude,
+                                              position.timestamp, fuel);
             }
         }
 
