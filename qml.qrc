@@ -11,5 +11,7 @@
         <file>icon/recordStop.png</file>
         <file>icon/myDirection.png</file>
         <file>icon/recordResume.png</file>
+        <file>icon/scale.png</file>
+        <file>icon/scale_end.png</file>
     </qresource>
 </RCC>
