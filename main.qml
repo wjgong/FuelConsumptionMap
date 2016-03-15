@@ -194,8 +194,8 @@ ApplicationWindow {
             var startPoint;
             var endPoint;
             var hasFuel = false;
+            var totalDistance = 0;
 
-            routeDistance = 0;
             if (typeof routeGpxModel.get(0).fuel != "string")
                 hasFuel = true;
             amountOfFuel = 0;
@@ -211,14 +211,14 @@ ApplicationWindow {
                                                     gpxPointEnd.lon);
 
                 var distance = startPoint.distanceTo(endPoint)
-                routeDistance += distance;
+                totalDistance += distance;
 
                 if (hasFuel) {
                     amountOfFuel +=
                             distance * (gpxPointStart.fuel + gpxPointEnd.fuel)/2;
                 }
             }
-            routeDistance = Math.round(routeDistance/1000);
+            routeDistance = Math.round(totalDistance/1000);
 
             if (hasFuel) {
                 amountOfFuel = (amountOfFuel / (1000 * 100)).toFixed(3);
