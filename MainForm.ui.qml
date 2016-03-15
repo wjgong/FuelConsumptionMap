@@ -229,21 +229,21 @@ Item {
                             x: 20
                         }
                     }
+                    Text {
+                        text: qsTr("Recording Mode")
+                        x: 20
+                        y: 5
+                        color: parent.enabled ? "white" : "gray"
+                        font.pointSize: 13
+                        font.bold: true
+                    }
                     Rectangle {
                         anchors.fill: parent
                         color: "black"
                         border.color: "gray"
                         border.width: 3
-                        z: -1
-                    }
-                    Text {
-                        text: qsTr("Recording Mode")
-                        x: 20
-                        y: 5
-                        color: "white"
-                        font.pointSize: 13
-                        font.bold: true
-                        z: 1
+                        z: parent.enabled ? parent.z - 1 : parent.z
+                        opacity: parent.enabled ? 1 : 0.5
                     }
                 }
             }
@@ -261,99 +261,6 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 running: false
-            }
-
-            Rectangle {
-                id: northIndicator
-                color: "white"
-                opacity: 0.5
-                border.color: "black"
-                border.width: 2
-                z: 1
-                implicitWidth: northLabel.height
-                implicitHeight: northLabel.height
-                radius: width/2
-                anchors.top: parent.top
-                anchors.topMargin: 10
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Text {
-                    id: northLabel
-                    text: qsTr("N")
-                    font.bold: true
-                    font.pointSize: 24
-                    anchors.centerIn: parent
-                    color: "red"
-                }
-            }
-            Rectangle {
-                id: southIndicator
-                color: "white"
-                opacity: 0.5
-                border.color: "black"
-                border.width: 2
-                z: 1
-                implicitWidth: southLabel.height
-                implicitHeight: southLabel.height
-                radius: width/2
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: false
-
-                Text {
-                    id: southLabel
-                    text: qsTr("S")
-                    font.bold: true
-                    font.pointSize: 24
-                    anchors.centerIn: parent
-                }
-            }
-            Rectangle {
-                id: westIndicator
-                color: "white"
-                opacity: 0.5
-                border.color: "black"
-                border.width: 2
-                z: 1
-                implicitWidth: westLabel.height
-                implicitHeight: westLabel.height
-                radius: width/2
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-                visible: false
-
-                Text {
-                    id: westLabel
-                    text: qsTr("W")
-                    font.bold: true
-                    font.pointSize: 24
-                    anchors.centerIn: parent
-                }
-            }
-            Rectangle {
-                id: eastIndicator
-                color: "white"
-                opacity: 0.5
-                border.color: "black"
-                border.width: 2
-                z: 1
-                implicitWidth: eastLabel.height
-                implicitHeight: eastLabel.height
-                radius: width/2
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-                visible: false
-
-                Text {
-                    id: eastLabel
-                    text: qsTr("E")
-                    font.bold: true
-                    font.pointSize: 24
-                    anchors.centerIn: parent
-                }
             }
 
             Column {
@@ -521,10 +428,6 @@ Item {
 
             PropertyChanges { target: recordCtrlBtn; visible: false }
             PropertyChanges { target: saveRouteBtn; visible: false }
-
-            PropertyChanges { target: southIndicator; visible: false }
-            PropertyChanges { target: westIndicator; visible: false }
-            PropertyChanges { target: eastIndicator; visible: false }
         },
         State {
             name: "RECORDING"
@@ -535,10 +438,6 @@ Item {
 
             PropertyChanges { target: recordCtrlBtn; visible: true }
             PropertyChanges { target: saveRouteBtn; visible: true }
-
-            PropertyChanges { target: southIndicator; visible: true }
-            PropertyChanges { target: westIndicator; visible: true }
-            PropertyChanges { target: eastIndicator; visible: true }
         }
     ]
 }

@@ -380,6 +380,7 @@ ApplicationWindow {
                 recordCtrlBtn.state = "recording";
                 recordCtrlBtn.text = qsTr("Pause");
                 saveRouteBtn.enabled = true;
+                modeSwitch.enabled = false;
                 positionSource.updateInterval = 3000;   // 3 seconds
                 createGpxFile();
                 mapViewer.routePolyline.visible = true;
@@ -402,6 +403,7 @@ ApplicationWindow {
                 recordCtrlBtn.state = "stopped";
                 recordCtrlBtn.text = qsTr("Start");
                 saveRouteBtn.enabled = false;
+                modeSwitch.enabled = true;
                 positionSource.updateInterval = 12000;
                 closeGpxFile();
                 break;

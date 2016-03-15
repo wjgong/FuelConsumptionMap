@@ -36,6 +36,99 @@ Map {
         line.color: 'green'
     }
 
+    Rectangle {
+        id: northIndicator
+        color: "white"
+        opacity: 0.5
+        border.color: "black"
+        border.width: 2
+        z: map.z + 1
+        implicitWidth: northLabel.height
+        implicitHeight: northLabel.height
+        radius: width/2
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Text {
+            id: northLabel
+            text: qsTr("N")
+            font.bold: true
+            font.pointSize: 24
+            anchors.centerIn: parent
+            color: "red"
+        }
+    }
+    Rectangle {
+        id: southIndicator
+        color: "white"
+        opacity: 0.5
+        border.color: "black"
+        border.width: 2
+        z: map.z + 1
+        implicitWidth: southLabel.height
+        implicitHeight: southLabel.height
+        radius: width/2
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: false
+
+        Text {
+            id: southLabel
+            text: qsTr("S")
+            font.bold: true
+            font.pointSize: 24
+            anchors.centerIn: parent
+        }
+    }
+    Rectangle {
+        id: westIndicator
+        color: "white"
+        opacity: 0.5
+        border.color: "black"
+        border.width: 2
+        z: map.z + 1
+        implicitWidth: westLabel.height
+        implicitHeight: westLabel.height
+        radius: width/2
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        visible: false
+
+        Text {
+            id: westLabel
+            text: qsTr("W")
+            font.bold: true
+            font.pointSize: 24
+            anchors.centerIn: parent
+        }
+    }
+    Rectangle {
+        id: eastIndicator
+        color: "white"
+        opacity: 0.5
+        border.color: "black"
+        border.width: 2
+        z: map.z + 1
+        implicitWidth: eastLabel.height
+        implicitHeight: eastLabel.height
+        radius: width/2
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        visible: false
+
+        Text {
+            id: eastLabel
+            text: qsTr("E")
+            font.bold: true
+            font.pointSize: 24
+            anchors.centerIn: parent
+        }
+    }
+
     Item {
         id: scale
         z: map.z + 3
@@ -141,10 +234,16 @@ Map {
             name: "LOCATION"
             PropertyChanges { target: iconMyLocation; source: "icon/myLocation.svg"}
             PropertyChanges { target: myLocation; rotation: 0}
+            PropertyChanges { target: southIndicator; visible: false }
+            PropertyChanges { target: westIndicator; visible: false }
+            PropertyChanges { target: eastIndicator; visible: false }
         },
         State {
             name: "DIRECTION"
             PropertyChanges { target: iconMyLocation; source: "icon/myDirection.png"}
+            PropertyChanges { target: southIndicator; visible: true }
+            PropertyChanges { target: westIndicator; visible: true }
+            PropertyChanges { target: eastIndicator; visible: true }
         }
     ]
 }
