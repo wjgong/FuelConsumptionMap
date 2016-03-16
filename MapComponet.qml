@@ -7,6 +7,8 @@ Map {
     property alias myLocation: myLocation
     property alias routePolyline: routePolyline
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
+    property alias destLocation: destLocation
+    property alias directionLine: directionLine
 
     anchors.fill: parent
     plugin: Plugin {
@@ -30,10 +32,26 @@ Map {
         anchorPoint.y: iconMyLocation.height/2
     }
 
+    MapQuickItem {
+        id: destLocation
+        sourceItem: Image {
+            id: iconDestLocation
+            source: "icon/destFlag.png"
+        }
+        anchorPoint.x: 4
+        anchorPoint.y: iconDestLocation.height
+    }
+
+    MapPolyline {
+        id: directionLine
+        line.width: 3
+        line.color: "red"
+    }
+
     MapPolyline {
         id: routePolyline
         line.width: 5
-        line.color: 'green'
+        line.color: "green"
     }
 
     Rectangle {

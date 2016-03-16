@@ -20,6 +20,7 @@ Item {
     property alias modeSwitch: modeSwitch
     property alias recordCtrlBtn: recordCtrlBtn
     property alias saveRouteBtn: saveRouteBtn
+    property alias waypointBtn: waypointBtn
 
     property real routeDistance: 0.0
     property real fuelConsumption: 0.0
@@ -263,6 +264,29 @@ Item {
                 running: false
             }
 
+            Button {
+                id: waypointBtn
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: -width/4
+                visible: false
+                rotation: 135
+                z: 1
+                opacity: 0.6
+                scale: 0.5
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: control.pressed ? "yellow" : "white"
+                        radius: width/2
+                        clip: true
+                    }
+                    label: Image {
+                        source: "icon/wppArrow.png"
+                        x: 22
+                    }
+                }
+            }
+
             Column {
                 id: fuelConsumptionColorTbl
                 spacing: 1
@@ -428,6 +452,7 @@ Item {
 
             PropertyChanges { target: recordCtrlBtn; visible: false }
             PropertyChanges { target: saveRouteBtn; visible: false }
+            PropertyChanges { target: waypointBtn; visible: false }
         },
         State {
             name: "RECORDING"
@@ -438,6 +463,7 @@ Item {
 
             PropertyChanges { target: recordCtrlBtn; visible: true }
             PropertyChanges { target: saveRouteBtn; visible: true }
+            PropertyChanges { target: waypointBtn; visible: true }
         }
     ]
 }

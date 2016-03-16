@@ -13,5 +13,7 @@
         <file>icon/recordResume.png</file>
         <file>icon/scale.png</file>
         <file>icon/scale_end.png</file>
+        <file>icon/wppArrow.png</file>
+        <file>icon/destFlag.png</file>
     </qresource>
 </RCC>

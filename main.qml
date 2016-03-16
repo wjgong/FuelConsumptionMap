@@ -60,6 +60,95 @@ ApplicationWindow {
             }
         }
 
+        Dialog {
+            id: waypointDialog
+            title: "Set Waypoints"
+            standardButtons: StandardButton.Ok | StandardButton.Cancel
+            width: mainForm.width
+            height: mainForm.height
+
+            Text {
+                id: dialogTitle
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.margins: 4
+                text: qsTr("Set the coordinate of your destination")
+                wrapMode: Text.WordWrap
+                color: "white"
+                font.bold: true
+                font.pointSize: 32
+            }
+
+            Text {
+                id: latLabel
+                anchors.left: parent.left
+                anchors.top: dialogTitle.bottom
+                anchors.margins: 32
+                color: "white"
+                font.bold: true
+                font.pointSize: 18
+                text: qsTr("Latitude:")
+            }
+            Rectangle {
+                id: latInputRect
+                anchors.left: latLabel.right
+                anchors.leftMargin: 8
+                anchors.bottom: latLabel.bottom
+                color: "black"
+                border.color: "white"
+                border.width: 4
+                width: latInput.width + 16
+                height: latInput.height + 16
+
+                TextInput {
+                    id: latInput
+                    width: 280
+                    height: 36
+                    anchors.centerIn: parent
+                    cursorVisible: true
+                    color: "white"
+                    maximumLength: 16
+                    validator: DoubleValidator { bottom: -180.0; top: 180.0 }
+                }
+            }
+
+            Text {
+                id: longLabel
+                anchors.left: latInputRect.right
+                anchors.top: dialogTitle.bottom
+                anchors.margins: 32
+                color: "white"
+                font.bold: true
+                font.pointSize: 18
+                text: qsTr("Longitude:")
+            }
+            Rectangle {
+                id: longInputRect
+                anchors.left: longLabel.right
+                anchors.leftMargin: 8
+                anchors.bottom: longLabel.bottom
+                color: "black"
+                border.color: "white"
+                border.width: 4
+                width: longInput.width + 16
+                height: longInput.height + 16
+
+                TextInput {
+                    id: longInput
+                    width: 280
+                    height: 36
+                    anchors.centerIn: parent
+                    color: "white"
+                    maximumLength: 16
+                    validator: DoubleValidator { bottom: -90.0; top: 90.0 }
+                }
+            }
+
+            onAccepted: {
+                mainForm.setDestination(latInput.text, longInput.text);
+            }
+        }
+
         XmlListModel {
             id: routeModel
             namespaceDeclarations: "declare default element namespace 'http://www.topografix.com/GPX/1/1';"
@@ -153,6 +242,8 @@ ApplicationWindow {
             }
         }
 
+        waypointBtn.onClicked: waypointDialog.open()
+
         PropertyAnimation {
             id: showRouteInfoPanelAni
             target: mainForm.routeInfoPanel
@@ -176,6 +267,19 @@ ApplicationWindow {
             loops: Animation.Infinite
             duration: 1000
             from: 0; to : 360
+        }
+
+        function setDestination(latitude, longitude) {
+            // TODO: validate the coordinate first
+            var destCoordinate = QtPositioning.coordinate(Number(latitude), Number(longitude));
+            mapViewer.destLocation.coordinate = destCoordinate;
+            mapViewer.addMapItem(mapViewer.destLocation);
+
+            mapViewer.directionLine.addCoordinate(mapViewer.myLocation.coordinate);
+            mapViewer.directionLine.addCoordinate(mapViewer.destLocation.coordinate);
+            mapViewer.addMapItem(mapViewer.directionLine);
+
+            mapViewer.fitViewportToMapItems();
         }
 
         function parseGpx(fileUrl) {
