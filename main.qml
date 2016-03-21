@@ -25,12 +25,15 @@ ApplicationWindow {
             onPositionChanged:  {
                 var coordinate = position.coordinate;
                 mapViewer.myLocation.coordinate = coordinate;
-
-                if (mapViewer.state === "DIRECTION"
-                        && mainForm.recordCtrlBtn.state === "recording") {
-                    var currentDateTime = new Date();
-                    mapViewer.routePolyline.addCoordinate(coordinate);
-                    mainForm.writeGpxFile(positionSource.position);
+                if (mapViewer.state === "DIRECTION") {
+                    if ( mainForm.recordCtrlBtn.state === "recording") {
+                        var currentDateTime = new Date();
+                        mapViewer.routePolyline.addCoordinate(coordinate);
+                        mainForm.writeGpxFile(positionSource.position);
+                    }
+                    if (mapViewer.directionLine.pathLength()) {
+                        mapViewer.directionLine.replaceCoordinate(0, coordinate);
+                    }
                 }
             }
         }
@@ -232,6 +235,7 @@ ApplicationWindow {
                 mainForm.state = "ROUTE_VIEWER";
                 mapViewer.state = "LOCATION";
                 compass.active = false;
+                removeOrienteeringItems();
             } else {
                 console.log("state from ROUTE_VIEWER to RECORDING");
                 mainForm.state = "RECORDING";
@@ -270,6 +274,8 @@ ApplicationWindow {
         }
 
         function setDestination(latitude, longitude) {
+            mapViewer.directionLine.removeCoordinate(1);
+            mapViewer.directionLine.removeCoordinate(0);
             // TODO: validate the coordinate first
             var destCoordinate = QtPositioning.coordinate(Number(latitude), Number(longitude));
             mapViewer.destLocation.coordinate = destCoordinate;
@@ -472,6 +478,13 @@ ApplicationWindow {
         function removeColoredRoute() {
             mapViewer.clearMapItems();
             mapViewer.addMapItem(mapViewer.myLocation);
+        }
+
+        function removeOrienteeringItems() {
+            mapViewer.directionLine.removeCoordinate(1);
+            mapViewer.directionLine.removeCoordinate(0);
+            mapViewer.removeMapItem(mapViewer.directionLine);
+            mapViewer.removeMapItem(mapViewer.destLocation);
         }
 
         function processRecordCtrlBtnState() {

@@ -57,7 +57,7 @@ Item {
                         }
 
                         label: Text {
-                            text: qsTr("Locate")
+                            text: qsTr("Find\nMe")
                             color: "white"
                             font.bold: true
                             font.pointSize: 20
@@ -231,7 +231,7 @@ Item {
                         }
                     }
                     Text {
-                        text: qsTr("Recording Mode")
+                        text: qsTr("Orienteering Mode")
                         x: 20
                         y: 5
                         color: parent.enabled ? "white" : "gray"
